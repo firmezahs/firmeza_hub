@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Developers | Firmeza Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ICONS -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+  <div class="admin-container">
+
+    <!-- SIDEBAR -->
+     <%- include('../partials/sidebar', { activePage: 'developers' }) %>
+
+    <!-- MAIN -->
+    <div class="main-new">
+
+        <%- include('../partials/header') %>
+
+      <!-- CONTENT WRAPPER -->
+      <div class="content-area">
+
+        <p class="breadcrumb">Dashboard / Developers</p>
+
+        <div class="page-header-new">
+          <h1>Developers <span class="badge">120</span></h1>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+          <div class="left-controls">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" placeholder="Search developers...">
+            </div>
+          </div>
+
+          <div class="right-controls">
+             <button class="add-btn">
+              <i class="ri-add-line"></i> Add Developer
+            </button>
+
+            <select class="entries-dropdown">
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select> 
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><input type="checkbox" class="row-checkbox"></td>
+                <td>Rohan Patel</td>
+                <td>rohan@gmail.com</td>
+                <td>Frontend Developer</td>
+                <td><span class="status active">Active</span></td>
+                <td class="actions">
+                  <div class="dropdown">
+                    <i class="ri-more-2-fill dropdown-toggle"></i>
+                    <div class="dropdown-menu">
+                      <div class="dropdown-item">View</div>
+                      <div class="dropdown-item">Edit</div>
+                      <div class="dropdown-item delete">Delete</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><input type="checkbox" class="row-checkbox"></td>
+                <td>Neha Sharma</td>
+                <td>neha@gmail.com</td>
+                <td>Backend Developer</td>
+                <td><span class="status active">Active</span></td>
+                <td class="actions">
+                  <div class="dropdown">
+                    <i class="ri-more-2-fill dropdown-toggle"></i>
+                    <div class="dropdown-menu">
+                      <div class="dropdown-item">View</div>
+                      <div class="dropdown-item">Edit</div>
+                      <div class="dropdown-item delete">Delete</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><input type="checkbox" class="row-checkbox"></td>
+                <td>Arjun Mehta</td>
+                <td>arjun@gmail.com</td>
+                <td>Full Stack</td>
+                <td><span class="status inactive">Inactive</span></td>
+                <td class="actions">
+                  <div class="dropdown">
+                    <i class="ri-more-2-fill dropdown-toggle"></i>
+                    <div class="dropdown-menu">
+                      <div class="dropdown-item">View</div>
+                      <div class="dropdown-item">Edit</div>
+                      <div class="dropdown-item delete">Delete</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <!-- END CONTENT -->
+
+      <!-- PAGINATION -->
+      <div class="table-footer">
+        <span>Showing 1–3 of 3</span>
+
+        <div class="pagination">
+          <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
+
+          <button class="page active">1</button>
+          <button class="page">2</button>
+          <button class="page">3</button>
+
+          <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JS -->
+  <script>
+    // Pagination active
+    const pages = document.querySelectorAll(".page");
+    pages.forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelector(".page.active")?.classList.remove("active");
+        btn.classList.add("active");
+      });
+    });
+
+    // Dropdown toggle
+    const toggles = document.querySelectorAll(".dropdown-toggle");
+    toggles.forEach(toggle => {
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+        toggle.nextElementSibling.style.display = "block";
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
+    });
+
+    // Select all checkboxes
+    const selectAll = document.getElementById("select-all");
+    const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+
+    selectAll.addEventListener("change", () => {
+      rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);
+    });
+
+    rowCheckboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        if (!cb.checked) selectAll.checked = false;
+        else if ([...rowCheckboxes].every(cb => cb.checked)) selectAll.checked = true;
+      });
+    });
+  </script>
+
+</body>
+</html>

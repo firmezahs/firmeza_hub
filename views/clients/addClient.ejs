@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Client | Firmeza Hub</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <%- include('../partials/sidebar', { activePage: activePage }) %>
+
+            <div class="main-new">
+
+                <%- include('../partials/header') %>
+
+                    <div class="content-area">
+
+                        <p class="breadcrumb">
+                            <a href="/dashboard"
+                                class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">Dashboard</a> /
+                            <a href="/clients"
+                                class="<%= activePage === 'clients' ? 'dark' : 'light' %>">Clients</a> /
+
+                            <% if (activePage==='addClient' ) { %>
+                                <span class="dark">Add Client</span>
+                                <% } %>
+                        </p>
+
+                        <div class="page-header-new">
+                            <h1>Add Client</h1>
+                        </div>
+
+                        <div class="form-card">
+
+                            <form id="clientForm" action="/clients/add" method="POST"
+                                enctype="multipart/form-data" class="client-form">
+
+                                <div class="form-group">
+                                    <label>Name <span class="required">*</span></label>
+                                    <input type="text" id="name" name="name"
+                                        placeholder="Enter Name"
+                                        value="<%= formData.name || '' %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Company Name <span class="required">*</span></label>
+                                    <input type="text" id="companyName" name="companyName"
+                                        placeholder="Enter Company Name"
+                                        value="<%= formData.companyName || '' %>">
+                                </div>
+
+                                <!-- COUNTRY -->
+                                <div class="form-group">
+                                    <label>Country</label>
+
+                                    <div class="custom-select">
+
+                                        <div class="select-box" id="selectBox">
+                                            <span id="selectedText">Select Country</span>
+                                            <i class="ri-arrow-down-s-line"></i>
+                                        </div>
+
+                                        <div class="select-dropdown" id="dropdown">
+
+                                            <input type="text" id="searchCountry"
+                                                placeholder="Search country...">
+
+                                            <div class="options">
+                                                <% countries.forEach(c=> { %>
+                                                    <div class="option"
+                                                        data-value="<%= c.name %>"
+                                                        data-code="<%= c.isoCode %>">
+                                                        <%= c.name %>
+                                                    </div>
+                                                    <% }) %>
+                                            </div>
+
+                                        </div>
+
+                                        <input type="hidden" name="country"
+                                            id="countryValue"
+                                            value="<%= formData.country || '' %>">
+                                    </div>
+                                </div>
+
+                                <!-- MOBILE -->
+                                <div class="form-group">
+                                    <label>Mobile Number <span class="required">*</span></label>
+                                    <input type="text" id="mobileNumber"
+                                        name="mobileNumber"
+                                        placeholder="Enter Mobile Number"
+                                        value="<%= formData.mobileNumber || '' %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email <span class="required">*</span></label>
+                                    <input type="text" id="email" name="email"
+                                        value="<%= formData.email || '' %>"
+                                        placeholder="Enter Email"
+                                        class="<%= emailExists ? 'input-error' : '' %>">
+
+                                    <small
+                                        class="error-message <%= emailExists ? 'show-error' : '' %>">
+                                        <%= emailExists ? 'Email already exists' : '' %>
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>GST Number</label>
+                                    <input type="text" name="gstNumber"
+                                        placeholder="Enter GST Number"
+                                        value="<%= formData.gstNumber || '' %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <textarea id="address" name="address"
+                                        class="input-field"
+                                        placeholder="Enter Address"><%= formData.address || '' %></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Logo</label>
+                                    <input type="file" name="logo">
+                                </div>
+
+                                <div class="form-actions">
+                                    <a href="/clients" class="cancel-btn">Cancel</a>
+                                    <button type="button" id="submitBtn"
+                                        class="save-btn" disabled>
+                                        Save Client
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+            </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="saveModal" class="modal">
+        <div class="modal-content modern primary">
+            <div class="modal-header">
+                <h3>Confirm</h3>
+                <span class="close-btn"
+                    onclick="closeSaveModal()">&times;</span>
+            </div>
+
+            <p>Do you really want to save this client?</p>
+
+            <div class="modal-actions">
+                <button onclick="closeSaveModal()">Cancel</button>
+                <button class="save-btn"
+                    onclick="confirmSave()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIBS -->
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
+
+    <!-- MAIN SCRIPT -->
+    <script>
+        const form = document.getElementById("clientForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const emailInput = document.getElementById("email");
+        const input = document.querySelector("#mobileNumber");
+
+        let emailExists = false;
+
+        const iti = window.intlTelInput(input, {
+            separateDialCode: true,
+            initialCountry: "in",
+            preferredCountries: ["in", "us", "gb"],
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+        });
+
+        function validateEmailFormat(email) {
+            return /^[^ ]+@[^ ]+\.[a-z]{2,}$/.test(email);
+        }
+
+        function checkFormValidity() {
+            const name = document.getElementById("name").value.trim();
+            const company = document.getElementById("companyName").value.trim();
+            const email = emailInput.value.trim();
+
+            const validEmail = validateEmailFormat(email);
+            const fullNumber = iti.getNumber();
+
+            submitBtn.disabled = !(name && company && fullNumber && validEmail && !emailExists);
+        }
+
+        submitBtn.addEventListener("click", () => {
+            document.getElementById("saveModal").style.display = "flex";
+        });
+
+        function closeSaveModal() {
+            document.getElementById("saveModal").style.display = "none";
+        }
+
+        function confirmSave() {
+            const fullNumber = iti.getNumber();
+            document.getElementById("mobileNumber").value = fullNumber;
+            form.submit();
+        }
+
+        emailInput.addEventListener("input", checkFormValidity);
+        ["name", "companyName"].forEach(id => {
+            document.getElementById(id).addEventListener("input", checkFormValidity);
+        });
+
+        input.addEventListener("input", checkFormValidity);
+
+        const selectBox = document.getElementById("selectBox");
+        const dropdown = document.getElementById("dropdown");
+        const searchInput = document.getElementById("searchCountry");
+        const options = document.querySelectorAll(".option");
+        const selectedText = document.getElementById("selectedText");
+        const hiddenInput = document.getElementById("countryValue");
+
+        selectBox.addEventListener("click", () => {
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        options.forEach(option => {
+            option.addEventListener("click", function () {
+                const value = this.dataset.value;
+                const isoCode = this.dataset.code.toLowerCase();
+
+                selectedText.textContent = value;
+                hiddenInput.value = value;
+
+                dropdown.style.display = "none";
+
+                iti.setCountry(isoCode);
+            });
+        });
+
+        searchInput.addEventListener("input", function () {
+            const filter = this.value.toLowerCase();
+
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                option.style.display = text.includes(filter) ? "block" : "none";
+            });
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".custom-select")) {
+                dropdown.style.display = "none";
+            }
+        });
+
+        window.addEventListener("load", function () {
+            const existing = hiddenInput.value;
+
+            if (existing) {
+                selectedText.textContent = existing;
+
+                const match = Array.from(options).find(
+                    opt => opt.dataset.value === existing
+                );
+
+                if (match) {
+                    iti.setCountry(match.dataset.code.toLowerCase());
+                }
+            }
+        });
+
+        input.addEventListener("countrychange", function () {
+            const countryData = iti.getSelectedCountryData();
+            hiddenInput.value = countryData.name;
+            selectedText.textContent = countryData.name;
+        });
+    </script>
+
+</body>
+
+</html>

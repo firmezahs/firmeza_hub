@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Clients | Firmeza Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ICONS -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    .preview-image {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .clickable-img {
+      cursor: pointer;
+    }
+
+    .client-name-click {
+      cursor: pointer;
+    }
+
+    .client-name-click:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <% if (success) { %>
+      <div id="toast" class="toast success">
+        <i class="ri-checkbox-circle-line"></i>
+        <span>
+          <%= success %>
+        </span>
+      </div>
+      <% } %>
+
+        <% if (error) { %>
+          <div id="toast" class="toast error">
+            <i class="ri-error-warning-line"></i>
+            <span>
+              <%= error %>
+            </span>
+          </div>
+          <% } %>
+
+            <%- include('../partials/sidebar', { activePage: activePage }) %>
+
+              <div class="main-new">
+
+                <%- include('../partials/header') %>
+
+                  <div class="content-area">
+
+                    <p class="breadcrumb">
+                      <a href="/dashboard" class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">Dashboard</a> /
+                      <a href="/clients" class="<%= activePage === 'clients' ? 'dark' : 'light' %>">Clients</a>
+                    </p>
+
+                    <div class="page-header-new">
+                      <h1>
+                        Clients
+                        <span class="badge">
+                          <%= clients?.length || 0 %>
+                        </span>
+                      </h1>
+                    </div>
+
+                    <!-- FILTER -->
+                    <div class="filter-bar">
+                      <div class="left-controls">
+                        <div class="search-box">
+                          <i class="ri-search-line"></i>
+                          <input type="text" placeholder="Search...">
+                        </div>
+                      </div>
+
+                      <div class="right-controls">
+                        <button class="add-btn" onclick="window.location.href='/clients/add'">
+                          <i class="ri-add-line"></i> Add Client
+                        </button>
+
+                        <select class="entries-dropdown">
+                          <option>10</option>
+                          <option>25</option>
+                          <option>50</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- TABLE -->
+                    <div class="table-wrapper">
+                      <table class="custom-table">
+                        <thead>
+                          <tr>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th>Client ID</th>
+                            <th>Logo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Country</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <% if (clients && clients.length> 0) { %>
+                            <% clients.forEach(client=> { %>
+                              <tr>
+                                <td><input type="checkbox" class="row-checkbox"></td>
+
+                                <td>
+                                  <%= client.clientId || '-' %>
+                                </td>
+
+                                <td>
+                                  <% if (client.logo) { %>
+                                    <img src="/uploads/<%= client.logo %>"
+                                      style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
+                                    <% } else { %>
+                                      -
+                                      <% } %>
+                                </td>
+
+                                <td>
+                                  <span class="client-name-click" onclick="openViewDrawer('<%= client._id %>')"
+                                    style="cursor:pointer;">
+                                    <%= client.name %>
+                                  </span>
+                                </td>
+                                <td>
+                                  <%= client.email %>
+                                </td>
+                                <td>
+                                  <%= client.companyName %>
+                                </td>
+
+                                <td><span class="status active">Active</span></td>
+                                <td>
+                                  <%= client.country || '-' %>
+                                </td>
+
+                                <td class="actions">
+                                  <div class="dropdown">
+                                    <i class="ri-more-2-fill dropdown-toggle"></i>
+
+                                    <div class="dropdown-menu">
+                                      <div class="dropdown-item" onclick="openViewDrawer('<%= client._id %>')">
+                                        <i class="ri-eye-line"></i> View
+                                      </div>
+
+                                      <div class="dropdown-item" onclick="editClient('<%= client._id %>')">
+                                        <i class="ri-edit-line"></i> Edit
+                                      </div>
+
+                                      <div class="dropdown-item delete-text"
+                                        onclick="openDeleteModal('<%= client._id %>')">
+                                        <i class="ri-delete-bin-6-line"></i> Delete
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <% }) %>
+                                <% } else { %>
+                                  <tr>
+                                    <td colspan="8" style="text-align:center; padding:20px;">
+                                      No clients found
+                                    </td>
+                                  </tr>
+                                  <% } %>
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+
+                  <div class="table-footer">
+                    <span>Showing <%= clients?.length || 0 %> of <%= clients?.length || 0 %></span>
+                  </div>
+
+              </div>
+  </div>
+
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content modern">
+      <div class="modal-header">
+        <h3>Confirm</h3>
+        <span class="close-btn" onclick="closeDeleteModal()">×</span>
+      </div>
+
+      <p>Do you really want to remove this item?</p>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+        <button class="delete-btn" onclick="confirmDeleteAction()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE PREVIEW MODAL -->
+  <div id="imagePreviewModal" class="modal">
+    <span class="close-btn" onclick="closeImagePreview()">×</span>
+    <img id="previewImg" class="preview-image" />
+  </div>
+
+  <!-- VIEW DRAWER -->
+  <div id="viewDrawer" class="drawer">
+    <div class="drawer-content modern-drawer">
+
+      <div class="drawer-top">
+        <button class="back-btn" onclick="closeDrawer()">
+          <i class="ri-arrow-left-s-line"></i>
+        </button>
+        <h2>View</h2>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="edit-btn" onclick="goToEdit()">
+          <i class="ri-edit-line"></i> Edit
+        </button>
+
+        <button class="delete-btn-outline" onclick="confirmDeleteFromDrawer()">
+          <i class="ri-delete-bin-line"></i> Delete
+        </button>
+      </div>
+
+      <div class="drawer-image">
+        <div class="image-placeholder"></div>
+      </div>
+
+      <div id="drawerBody" class="drawer-body"></div>
+
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    let deleteId = null;
+
+    function openDeleteModal(id) {
+      deleteId = id;
+      document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+      document.getElementById("deleteModal").style.display = "none";
+    }
+
+    function confirmDeleteAction() {
+      if (deleteId) {
+        window.location.href = "/clients/delete/" + deleteId;
+      }
+    }
+
+    document.addEventListener("click", function () {
+      document.querySelectorAll(".dropdown-menu").forEach(menu => {
+        menu.style.display = "none";
+      });
+    });
+
+    document.querySelectorAll(".dropdown-toggle").forEach(toggle => {
+      toggle.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const menu = this.nextElementSibling;
+
+        document.querySelectorAll(".dropdown-menu").forEach(m => {
+          if (m !== menu) m.style.display = "none";
+        });
+
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    const selectAll = document.getElementById("select-all");
+    if (selectAll) {
+      selectAll.addEventListener("change", () => {
+        document.querySelectorAll(".row-checkbox").forEach(cb => {
+          cb.checked = selectAll.checked;
+        });
+      });
+    }
+  </script>
+
+  <!-- IMAGE PREVIEW JS -->
+  <script>
+    function openImagePreview(src) {
+      const modal = document.getElementById("imagePreviewModal");
+      const img = document.getElementById("previewImg");
+
+      img.src = src;
+      modal.style.display = "flex";
+    }
+
+    function closeImagePreview() {
+      document.getElementById("imagePreviewModal").style.display = "none";
+    }
+
+    document.getElementById("imagePreviewModal")?.addEventListener("click", function (e) {
+      if (e.target === this) {
+        closeImagePreview();
+      }
+    });
+  </script>
+
+  <!-- DRAWER -->
+  <script>
+    let currentClientId = null;
+
+    async function openViewDrawer(id) {
+      try {
+        currentClientId = id;
+
+        const res = await fetch(`/clients/view/${id}`);
+        const client = await res.json();
+
+        const body = document.getElementById("drawerBody");
+        const imageContainer = document.querySelector(".drawer-image");
+
+        imageContainer.innerHTML = client.logo
+          ? `<img src="/uploads/${client.logo}" 
+                 class="drawer-img clickable-img" 
+                 onclick="openImagePreview('/uploads/${client.logo}')" />`
+          : `<div class="image-placeholder"></div>`;
+
+        body.innerHTML = `
+          <div class="info-block"><span>Client ID</span><p>${client.clientId || '-'}</p></div>
+          <div class="info-block"><span>Name</span><p>${client.name}</p></div>
+          <div class="info-block"><span>Address</span><p>${client.address || '-'}</p></div>
+          <div class="info-block"><span>Company</span><p>${client.companyName}</p></div>
+          <div class="info-block"><span>Email</span><p>${client.email}</p></div>
+          <div class="info-block"><span>GST</span><p>${client.gstNumber}</p></div>
+          <div class="info-block"><span>Mobile</span><p>${client.mobileNumber}</p></div>
+          <div class="info-block"><span>Country</span><p>${client.country || '-'}</p></div>
+        `;
+
+        document.getElementById("viewDrawer").classList.add("active");
+
+      } catch (err) {
+        console.error("Drawer error:", err);
+      }
+    }
+
+    function closeDrawer() {
+      document.getElementById("viewDrawer").classList.remove("active");
+    }
+
+    function confirmDeleteFromDrawer() {
+      if (currentClientId) openDeleteModal(currentClientId);
+    }
+
+    function editClient(id) {
+      window.location.href = `/clients/edit/${id}`;
+    }
+
+    function goToEdit() {
+      if (currentClientId) {
+        window.location.href = `/clients/edit/${currentClientId}`;
+      }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+<!-- GLOBAL TOP HEADER -->
+<div class="global-header">
+    <div class="header-left">
+        <!-- You can add breadcrumbs here later -->
+    </div>
+
+    <div class="header-right">
+        <span class="username">
+            <%= typeof user !=='undefined' && user ? user.name : "user-name" %>
+        </span>
+
+        <div class="avatar">
+            <%= (typeof user !=='undefined' && user) ? user.name.charAt(0).toUpperCase() : "A" %>
+        </div>
+    </div>
+</div>
