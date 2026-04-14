@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Services</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-new">
+    <h2>Firmeza</h2>
+
+    <a href="/dashboard"><i class="ri-home-4-fill"></i> Dashboard</a>
+    <a href="/clients"><i class="ri-user-fill"></i> Clients</a>
+    <a href="/developers"><i class="ri-user-fill"></i> Developers</a>
+
+    <!-- ACTIVE -->
+    <a class="active" href="/services"><i class="ri-customer-service-2-line"></i> Services</a>
+
+    <a><i class="ri-file-list-3-line"></i> Agreements</a>
+    <a><i class="ri-box-3-line"></i> Products</a>
+    <a href="/auth/logout"><i class="ri-logout-box-r-line"></i> Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-new">
+
+    <%- include('../partials/header') %>
+
+    <div class="content-area" style="padding: 30px;">
+      <h1>This is service page</h1>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

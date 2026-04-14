@@ -111,10 +111,18 @@ body.login-page {
   margin-left: 250px;
   width: calc(100% - 250px);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   background: var(--bg-main);
   padding: 30px 50px;
+
+  display: flex;
+  flex-direction: column;   /* 🔥 IMPORTANT */
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ================= LOGIN PAGE ================= */
@@ -326,7 +334,7 @@ button {
   background: white;
   font-size: 14px;
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 .add-btn {
@@ -355,11 +363,17 @@ button {
 
 /* ================= TABLE ================= */
 .table-wrapper {
-  margin-top: 10px;
-  background: var(--bg-light);
+  background: #fff;
   border-radius: 12px;
-  overflow: visible;
+  overflow: hidden;
   border: 1px solid var(--border);
+  flex: 1;
+  display: flex;          /* 🔥 important */
+  flex-direction: column; /* 🔥 important */
+}
+
+.client-card:last-child {
+  border-bottom: none;
 }
 
 .custom-table {
@@ -380,7 +394,7 @@ button {
 }
 
 .custom-table td {
-  padding: 16px 14px;
+  padding: 12px 14px;
   border-top: 1px solid var(--border);
   color: var(--text-main);
 }
@@ -396,11 +410,42 @@ button {
 
 /* ================= ACTIONS ================= */
 .actions {
-  text-align: right;
+  justify-content: flex-end;
+  cursor: pointer;
 }
 
-.actions i {
-  cursor: pointer;
+.dataTables_info {
+  padding-left: 4px;
+}
+
+.dataTables_paginate {
+  padding-right: 4px;
+}
+
+.clientsTable {
+  width: 100% !important;
+  table-layout: fixed;   /* ✅ FIX spacing issue */
+}
+
+.clientsTable th:nth-child(1),
+.clientsTable td:nth-child(1) {
+  width: 40%;   /* Client */
+}
+
+.clientsTable th:nth-child(2),
+.clientsTable td:nth-child(2) {
+  width: 25%;   /* Company */
+}
+
+.clientsTable th:nth-child(3),
+.clientsTable td:nth-child(3) {
+  width: 25%;   /* Email */
+}
+
+.clientsTable th:nth-child(4),
+.clientsTable td:nth-child(4) {
+  width: 10%;   /* Actions (3 dots) */
+  text-align: right;
 }
 
 .actions i:hover {
@@ -429,9 +474,11 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  font-size: 14px;
-  color: var(--text-light);
+
+  margin-top: auto;   /* 🔥 KEY FIX */
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: #fff;
 }
 
 
@@ -475,8 +522,6 @@ button {
 }
 
 .content-area {
-  flex: 1;
-  overflow-y: auto;
   padding-top: 20px;
   padding: 30px 0 0 0;
   width: 100%;
@@ -591,7 +636,7 @@ button {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
-  gap: 10px;  
+  gap: 10px;
 }
 
 .save-btn {
@@ -753,7 +798,7 @@ textarea,
 .modal-content.modern {
   background: #fff;
   width: 650px;
-  max-width: 90%; 
+  max-width: 90%;
   border-radius: 10px;
   padding: 30px;
   border-left: 6px solid red;
@@ -879,7 +924,8 @@ textarea,
 .client-form input {
   width: 100%;
   height: 44px;
-  padding: 12px 14px;   /* ✅ add vertical padding */
+  padding: 12px 14px;
+  /* ✅ add vertical padding */
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   font-size: 14px;
@@ -887,7 +933,8 @@ textarea,
   outline: none;
   display: flex;
   align-items: center;
-  line-height: 1.2;     /* ✅ control text alignment */
+  line-height: 1.2;
+  /* ✅ control text alignment */
 }
 
 #countrySearch {
@@ -1148,7 +1195,8 @@ textarea,
 
 /* BLUE VARIANT */
 .modal-content.primary {
-  border-left: 6px solid #3b82f6; /* blue */
+  border-left: 6px solid #3b82f6;
+  /* blue */
 }
 
 /* header color */
@@ -1168,7 +1216,8 @@ textarea,
 
 /* YELLOW VARIANT (EDIT) */
 .modal-content.warning {
-  border-left: 6px solid #f59e0b; /* yellow */
+  border-left: 6px solid #f59e0b;
+  /* yellow */
 }
 
 .modal-content.warning .modal-header {
@@ -1205,47 +1254,47 @@ textarea,
 }
 
 .logo-upload-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .logo-preview {
-    width: 100px;
-    height: 100px;
-    border: 1px dashed #ccc;
-    border-radius: 8px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #f9f9f9;
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f9f9f9;
 }
 
 .logo-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .logo-preview:empty {
-    display: none;
+  display: none;
 }
 
 .remove-logo {
-    position: absolute;
-    top: 4px;
-    right: 6px;
-    background: #ff4d4f;
-    color: #fff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 12px;
-    text-align: center;
-    line-height: 18px;
-    cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: #ff4d4f;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 18px;
+  cursor: pointer;
 }
 
 /* IMAGE LIGHTBOX MODAL */
@@ -1266,7 +1315,7 @@ textarea,
   max-width: 90%;
   max-height: 90%;
   border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .close-preview {
@@ -1296,24 +1345,249 @@ textarea,
 }
 
 .country-dropdown {
-    position: absolute;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    display: none;
-    z-index: 1000;
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: none;
+  z-index: 1000;
 }
 
 .country-option {
-    padding: 10px;
-    cursor: pointer;
+  padding: 10px;
+  cursor: pointer;
 }
 
 .country-option:hover {
-    background: #f5f5f5;
+  background: #f5f5f5;
+}
+
+/* ================= CLIENT CARD LIST (UPDATED UI) ================= */
+
+.client-list {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.client-card {
+  display: grid;
+  grid-template-columns: 2.2fr 1.2fr 1.6fr 60px;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 18px;              /* ✅ add spacing inside row */
+  border-bottom: 1px solid var(--border); /* ✅ row divider */
+  background: #fff;
+}
+
+/* Hover */
+.client-card:hover {
+  background: #f9fafb;
+  transform: none;
+  box-shadow: none;
+}
+
+.client-card .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Each column */
+.client-block {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.client-block p {
+  margin: 0;
+  text-align: left;
+  /* ✅ important */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== LEFT MAIN (FIXED) ===== */
+.client-main {
+ display: grid !important;
+  grid-template-columns: 44px 1fr;
+  column-gap: 10px;  /* ✅ increase from 8 → 12 */
+  align-items: center;
+}
+
+.client-table-header {
+  display: grid;
+  grid-template-columns: 2.2fr 1.2fr 1.6fr 60px;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 18px;              /* ✅ same as rows */
+  background: #f9fafb;             /* ✅ light header bg */
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.client-table-header div {
+  white-space: nowrap;
+}
+
+/* Avatar container */
+.client-avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image */
+.client-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder (letter avatar) */
+.client-logo.placeholder {
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* TEXT FIX */
+.client-id {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.client-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.client-code {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.client-country {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Labels */
+.label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 🔥 FIX: Align logo + text like design */
+
+.client-main {
+  display: grid !important;
+  grid-template-columns: 60px 1fr;
+  column-gap: 8px;
+  align-items: center;
+}
+
+/* Avatar stays in first column */
+.client-avatar {
+  grid-row: span 3;
+  width: 44px;
+  height: 44px;
+  /* 🔥 makes logo cover all text rows */
+}
+
+/* Make text break into rows */
+.client-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;   /* ✅ was too tight */
+}
+
+/* Each text line becomes its own row */
+.client-id {
+  grid-column: 2;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.client-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.client-country {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dataTables_wrapper {
+  display: flex !important;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+  flex: 1;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  margin-top: auto;
+  padding: 12px 18px;
+}
+
+.table-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;   /* ✅ space from table */
+  padding: 10px 4px;
+}
+
+.dataTables_wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Push info + pagination away from table */
+.dataTables_wrapper .dataTables_info {
+  padding: 12px 18px;
+  margin-top: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding: 12px 18px;
+  margin-bottom: 10px;
 }
 
 /* ANIMATION */

@@ -9,6 +9,7 @@ import multer from "multer";
 import authRoutes from "./routes/authRoutes.js";
 import agreementRoutes from "./routes/agreementRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js"
 
 // Load env
 dotenv.config({ path: "./config.env" });
@@ -70,10 +71,11 @@ mongoose
 app.use("/auth", authRoutes);
 app.use("/agreements", agreementRoutes);
 app.use("/clients", clientRoutes);
+app.use('/services', serviceRoutes);
 
 // Frontend routes
 app.get("/", (req, res) => {
-  res.render("index");
+  res.redirect("/auth/login");
 });
 
 // Health check

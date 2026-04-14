@@ -152,7 +152,7 @@ router.post("/edit/:id", upload.single("logo"), async (req, res) => {
       email,
       gstNumber,
       address,
-      country // ✅ ADDED
+      country 
     };
 
     if (req.body.removeLogo === "true") {
