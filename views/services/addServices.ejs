@@ -117,7 +117,7 @@
   let formToSubmit = null;
 
   // detect mode from EJS (BEST way)
-  const isEdit = <%= service ? 'true' : 'false' %>;
+  const isEdit = "<%= service ? 'true' : 'false' %>" === "true";
 
   // INTERCEPT FORM SUBMIT
   $('#serviceForm').on('submit', function(e) {
