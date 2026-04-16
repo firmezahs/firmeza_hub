@@ -10,6 +10,7 @@ import authRoutes from "./routes/authRoutes.js";
 import agreementRoutes from "./routes/agreementRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js"
+import developerRoutes from "./routes/developerRoutes.js"
 
 // Load env
 dotenv.config({ path: "./config.env" });
@@ -72,6 +73,7 @@ app.use("/auth", authRoutes);
 app.use("/agreements", agreementRoutes);
 app.use("/clients", clientRoutes);
 app.use('/services', serviceRoutes);
+app.use('/developers', developerRoutes)
 
 // Frontend routes
 app.get("/", (req, res) => {
@@ -85,12 +87,6 @@ app.get("/health", (req, res) => {
 app.get("/dashboard", (req, res) => {
   res.render("dashboard", {
     user: { name: "Demo User" } // temporary
-  });
-});
-
-app.get("/developers", (req, res) => {
-  res.render("developers/developers", {
-    activePage: "developers"   // 👈 ADD THIS
   });
 });
 

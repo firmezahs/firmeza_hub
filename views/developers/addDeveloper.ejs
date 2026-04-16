@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= (typeof developer !== 'undefined' && developer) ? 'Edit Developer' : 'Add Developer' %> | Firmeza Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+  <%- include('../partials/sidebar', { activePage: activePage }) %>
+
+  <div class="main-new">
+
+    <%- include('../partials/header') %>
+
+    <div class="content-area">
+
+      <p class="breadcrumb">
+        <a href="/dashboard"
+          class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">
+          Dashboard
+        </a> /
+
+        <a href="/developers"
+          class="<%= activePage === 'developers' ? 'dark' : 'light' %>">
+          Developers
+        </a> /
+
+        <span class="dark">
+          <%= (typeof developer !== 'undefined' && developer) ? 'Edit Developer' : 'Add Developer' %>
+        </span>
+      </p>
+
+      <div class="page-header-new">
+        <h1>
+          <%= (typeof developer !== 'undefined' && developer) ? 'Edit Developer' : 'Add Developer' %>
+        </h1>
+      </div>
+
+      <div class="form-card">
+
+        <form 
+          id="developerForm" 
+          action="<%= (typeof developer !== 'undefined' && developer) ? '/developers/edit/' + developer._id : '/developers/add' %>" 
+          method="POST" 
+          class="client-form"
+        >
+
+          <!-- NAME -->
+          <div class="form-group">
+            <label>Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              placeholder="Enter Name"
+              value="<%= developer?.name || formData?.name || '' %>"
+            >
+          </div>
+
+          <!-- EMAIL -->
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+
+            <input 
+              type="text" 
+              id="email" 
+              name="email" 
+              placeholder="Enter Email"
+              value="<%= developer?.email || formData?.email || '' %>"
+              class="<%= emailExists ? 'input-error' : '' %>"
+            >
+
+            <small 
+              id="emailError"
+              class="error-message <%= emailExists ? 'show-error' : '' %>">
+              <%= emailExists ? 'Email already exists' : '' %>
+            </small>
+          </div>
+
+          <!-- ROLE -->
+          <div class="form-group">
+            <label>Role <span class="required">*</span></label>
+            <select id="role" name="role">
+              <option value="">Select Role</option>
+
+              <option value="frontend"
+                <%= (developer?.role || formData?.role) === 'frontend' ? 'selected' : '' %>>
+                Frontend
+              </option>
+
+              <option value="backend"
+                <%= (developer?.role || formData?.role) === 'backend' ? 'selected' : '' %>>
+                Backend
+              </option>
+
+              <option value="fullstack"
+                <%= (developer?.role || formData?.role) === 'fullstack' ? 'selected' : '' %>>
+                Fullstack
+              </option>
+
+              <option value="designer"
+                <%= (developer?.role || formData?.role) === 'designer' ? 'selected' : '' %>>
+                Designer
+              </option>
+
+              <option value="tester"
+                <%= (developer?.role || formData?.role) === 'tester' ? 'selected' : '' %>>
+                Tester
+              </option>
+            </select>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="form-actions">
+            <a href="/developers" class="cancel-btn">Cancel</a>
+
+            <button type="button" id="submitBtn" class="save-btn" disabled>
+              <%= (typeof developer !== 'undefined' && developer) ? 'Update Developer' : 'Save Developer' %>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="saveModal" class="modal">
+  <div class="modal-content modern <%= (typeof developer !== 'undefined' && developer) ? 'warning' : 'primary' %>">
+
+    <div class="modal-header">
+      <h3>Confirm</h3>
+      <span class="close-btn" onclick="closeSaveModal()">×</span>
+    </div>
+
+    <p>
+      Do you really want to 
+      <%= (typeof developer !== 'undefined' && developer) ? 'update' : 'save' %> this developer?
+    </p>
+
+    <div class="modal-actions">
+      <button onclick="closeSaveModal()">Cancel</button>
+
+      <button 
+        class="<%= (typeof developer !== 'undefined' && developer) ? 'update-btn' : 'save-btn' %>" 
+        onclick="confirmSave()">
+        Confirm
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("developerForm");
+  const submitBtn = document.getElementById("submitBtn");
+
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const roleInput = document.getElementById("role");
+
+  function validateEmail(email) {
+    return /^[^ ]+@[^ ]+\.[a-z]{2,}$/i.test(email);
+  }
+
+  function checkFormValidity() {
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const role = roleInput.value;
+
+    submitBtn.disabled = !(name && validateEmail(email) && role);
+  }
+
+  nameInput.addEventListener("input", checkFormValidity);
+  emailInput.addEventListener("input", checkFormValidity);
+  roleInput.addEventListener("change", checkFormValidity);
+
+  submitBtn.addEventListener("click", () => {
+    document.getElementById("saveModal").style.display = "flex";
+  });
+
+  function closeSaveModal() {
+    document.getElementById("saveModal").style.display = "none";
+  }
+
+  function confirmSave() {
+    form.submit();
+  }
+</script>
+
+</body>
+</html>

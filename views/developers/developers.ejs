@@ -5,191 +5,365 @@
   <title>Developers | Firmeza Hub</title>
   <link rel="stylesheet" href="/css/style.css">
 
-  <!-- FONT -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- ICONS -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body>
 
-
   <div class="admin-container">
 
-    <!-- SIDEBAR -->
-     <%- include('../partials/sidebar', { activePage: 'developers' }) %>
+    <%- include('../partials/sidebar', { activePage: activePage }) %>
 
-    <!-- MAIN -->
-    <div class="main-new">
+      <div class="main-new">
 
         <%- include('../partials/header') %>
 
-      <!-- CONTENT WRAPPER -->
-      <div class="content-area">
+          <div class="content-area">
 
-        <p class="breadcrumb">Dashboard / Developers</p>
+            <p class="breadcrumb">
+              <a href="/dashboard" class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">
+                Dashboard
+              </a> /
+              <a href="/developers" class="<%= activePage === 'developers' ? 'dark' : 'light' %>">
+                Developers
+              </a>
+            </p>
 
-        <div class="page-header-new">
-          <h1>Developers <span class="badge">120</span></h1>
-        </div>
+            <div class="page-header-new">
+              <h1>
+                Developers
+                <span class="badge">
+                  <%= developers.length %>
+                </span>
+              </h1>
+            </div>
 
-        <!-- FILTER BAR -->
-        <div class="filter-bar">
-          <div class="left-controls">
-            <div class="search-box">
-              <i class="ri-search-line"></i>
-              <input type="text" placeholder="Search developers...">
+            <div class="filter-bar">
+
+              <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" id="searchInput" placeholder="Search developers..." />
+              </div>
+
+              <div class="right-controls">
+                <button class="add-btn" onclick="window.location.href='/developers/add'">
+                  <i class="ri-add-line"></i> Add Developer
+                </button>
+
+                <select class="entries-dropdown">
+                  <option>10</option>
+                  <option>25</option>
+                  <option>50</option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="table-wrapper">
+              <table class="custom-table" id="developersTable">
+
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Developer</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  <% if (developers && developers.length> 0) { %>
+
+                    <% developers.forEach(dev=> { %>
+                      <tr>
+
+                        <td><input type="checkbox" class="row-checkbox"></td>
+
+                        <td>
+                          <div style="display:flex; flex-direction:column;">
+                            <span style="color:#8a8fa3; font-size:13px;">
+                              <%= dev.dev_id %>
+                            </span>
+                            <span style="font-weight:600; font-size:15px;">
+                              <%= dev.name %>
+                            </span>
+                          </div>
+                        </td>
+
+                        <td>
+                          <%= dev.email %>
+                        </td>
+
+                        <td style="text-transform: capitalize;">
+                          <%= dev.role %>
+                        </td>
+
+                        <td>
+                          <span class="status <%= dev.status %>">
+                            <%= dev.status %>
+                          </span>
+                        </td>
+
+                        <td class="actions">
+                          <div class="action-menu">
+                            <i class="ri-more-2-fill menu-toggle"></i>
+
+                            <div class="dropdown">
+                              <div class="dropdown-item action-click" data-action="view" data-id="<%= dev._id %>">
+                                <i class="ri-eye-line"></i> View
+                              </div>
+
+                              <div class="dropdown-item action-click" data-action="edit" data-id="<%= dev._id %>">
+                                <i class="ri-edit-line"></i> Edit
+                              </div>
+
+                              <div class="dropdown-item action-click delete-text" data-action="delete"
+                                data-id="<%= dev._id %>">
+                                <i class="ri-delete-bin-6-line"></i> Delete
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                      </tr>
+                      <% }) %>
+
+                        <% } else { %>
+
+                          <tr>
+                            <td colspan="6" style="text-align:center;">
+                              No developers found
+                            </td>
+                          </tr>
+
+                          <% } %>
+
+                </tbody>
+
+              </table>
+            </div>
+
+          </div>
+
+          <div class="table-footer">
+            <span>
+              Showing <%= developers.length %> of <%= developers.length %>
+            </span>
+
+            <div class="pagination">
+              <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
+              <button class="page active">1</button>
+              <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
             </div>
           </div>
 
-          <div class="right-controls">
-             <button class="add-btn">
-              <i class="ri-add-line"></i> Add Developer
-            </button>
-
-            <select class="entries-dropdown">
-              <option>10</option>
-              <option>25</option>
-              <option>50</option>
-            </select> 
-          </div>
-        </div>
-
-        <!-- TABLE -->
-        <div class="table-wrapper">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th><input type="checkbox" id="select-all"></th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td><input type="checkbox" class="row-checkbox"></td>
-                <td>Rohan Patel</td>
-                <td>rohan@gmail.com</td>
-                <td>Frontend Developer</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <div class="dropdown">
-                    <i class="ri-more-2-fill dropdown-toggle"></i>
-                    <div class="dropdown-menu">
-                      <div class="dropdown-item">View</div>
-                      <div class="dropdown-item">Edit</div>
-                      <div class="dropdown-item delete">Delete</div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td><input type="checkbox" class="row-checkbox"></td>
-                <td>Neha Sharma</td>
-                <td>neha@gmail.com</td>
-                <td>Backend Developer</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <div class="dropdown">
-                    <i class="ri-more-2-fill dropdown-toggle"></i>
-                    <div class="dropdown-menu">
-                      <div class="dropdown-item">View</div>
-                      <div class="dropdown-item">Edit</div>
-                      <div class="dropdown-item delete">Delete</div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td><input type="checkbox" class="row-checkbox"></td>
-                <td>Arjun Mehta</td>
-                <td>arjun@gmail.com</td>
-                <td>Full Stack</td>
-                <td><span class="status inactive">Inactive</span></td>
-                <td class="actions">
-                  <div class="dropdown">
-                    <i class="ri-more-2-fill dropdown-toggle"></i>
-                    <div class="dropdown-menu">
-                      <div class="dropdown-item">View</div>
-                      <div class="dropdown-item">Edit</div>
-                      <div class="dropdown-item delete">Delete</div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
       </div>
-      <!-- END CONTENT -->
-
-      <!-- PAGINATION -->
-      <div class="table-footer">
-        <span>Showing 1–3 of 3</span>
-
-        <div class="pagination">
-          <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
-
-          <button class="page active">1</button>
-          <button class="page">2</button>
-          <button class="page">3</button>
-
-          <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
-        </div>
-      </div>
-
-    </div>
-
   </div>
 
-  <!-- JS -->
-  <script>
-    // Pagination active
-    const pages = document.querySelectorAll(".page");
-    pages.forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelector(".page.active")?.classList.remove("active");
-        btn.classList.add("active");
-      });
-    });
+  <!-- VIEW DRAWER (NO IMAGE VERSION) -->
+  <div id="viewDrawer" class="drawer">
+    <div class="drawer-content">
 
-    // Dropdown toggle
-    const toggles = document.querySelectorAll(".dropdown-toggle");
-    toggles.forEach(toggle => {
-      toggle.addEventListener("click", (e) => {
-        e.stopPropagation();
-        document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
-        toggle.nextElementSibling.style.display = "block";
-      });
-    });
+      <div class="drawer-header">
+        <button class="back-btn" onclick="closeDrawer()">
+          <i class="ri-arrow-left-line"></i>
+        </button>
 
-    document.addEventListener("click", () => {
-      document.querySelectorAll(".dropdown-menu").forEach(menu => menu.style.display = "none");
-    });
+        <div class="drawer-actions">
+          <button id="editBtn" class="edit-btn">Edit</button>
+          <button id="deleteBtn" class="delete-btn">Delete</button>
+        </div>
+      </div>
 
-    // Select all checkboxes
-    const selectAll = document.getElementById("select-all");
-    const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+      <div id="drawerBody"></div>
 
-    selectAll.addEventListener("change", () => {
-      rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);
-    });
+    </div>
+  </div>
 
-    rowCheckboxes.forEach(cb => {
-      cb.addEventListener("change", () => {
-        if (!cb.checked) selectAll.checked = false;
-        else if ([...rowCheckboxes].every(cb => cb.checked)) selectAll.checked = true;
-      });
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content modern">
+      <h3>Confirm Delete</h3>
+      <p>Do you really want to delete?</p>
+
+      <div class="modal-actions">
+        <button onclick="closeDelete()">Cancel</button>
+        <button onclick="confirmDelete()" class="delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOASTS -->
+  <% if (query && query.deleted) { %>
+    <div id="toast" class="toast error show">
+      Developer deleted successfully
+    </div>
+    <% } %>
+
+      <% if (query && query.added) { %>
+        <div id="toast" class="toast success show">
+          Developer added successfully
+        </div>
+        <% } %>
+
+          <% if (query && query.updated) { %>
+            <div id="toast" class="toast success show">
+              Developer updated successfully
+            </div>
+            <% } %>
+
+              <script>
+
+                let deleteId = null;
+
+                const searchInput = document.getElementById("searchInput");
+                searchInput.addEventListener("keyup", function () {
+                  const value = this.value.toLowerCase();
+                  const rows = document.querySelectorAll("#developersTable tbody tr");
+
+                  rows.forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(value)
+                      ? "" : "none";
+                  });
+                });
+
+                const selectAll = document.getElementById("select-all");
+                const checkboxes = document.querySelectorAll(".row-checkbox");
+
+                selectAll?.addEventListener("change", () => {
+                  checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                });
+
+                document.addEventListener("click", function (e) {
+
+                  if (e.target.classList.contains("menu-toggle")) {
+                    e.stopPropagation();
+                    document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
+                    e.target.nextElementSibling.style.display = "block";
+                    return;
+                  }
+
+                  const el = e.target.closest(".action-click");
+                  if (el) {
+                    const id = el.dataset.id;
+                    const action = el.dataset.action;
+
+                    if (action === "view") openViewDrawer(id);
+
+                    if (action === "edit")
+                      window.location.href = "/developers/edit/" + id;
+
+                    if (action === "delete") {
+                      deleteId = id;
+                      document.getElementById("deleteModal").style.display = "flex";
+                    }
+
+                    return;
+                  }
+
+                  document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
+                });
+
+                function openViewDrawer(id) {
+  fetch("/developers/view/" + id)
+    .then(res => res.json())
+    .then(dev => {
+
+      document.getElementById("drawerBody").innerHTML = `
+        <div style="padding: 22px;">
+
+          <!-- HEADER (Clients style) -->
+          <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eee;
+          ">
+
+            <div>
+              <div style="font-size: 18px; font-weight: 700; color: #111;">
+                ${dev.name}
+              </div>
+
+              <div style="font-size: 12px; color: #9ca3af; margin-top: 4px;">
+                ${dev.dev_id}
+              </div>
+            </div>
+
+          </div>
+
+          <!-- DETAILS (STRICT CLIENT STYLE ROWS) -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+
+            <div>
+              <div style="font-size: 12px; color: #9ca3af;">Email</div>
+              <div style="font-size: 14px; font-weight: 600; color: #111;">
+                ${dev.email}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 12px; color: #9ca3af;">Role</div>
+              <div style="font-size: 14px; font-weight: 600; text-transform: capitalize;">
+                ${dev.role}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 12px; color: #9ca3af;">Status</div>
+              <div style="margin-top: 4px;">
+                <span class="status ${dev.status}">
+                  ${dev.status}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      document.getElementById("editBtn").onclick = () => {
+        window.location.href = "/developers/edit/" + id;
+      };
+
+      document.getElementById("deleteBtn").onclick = () => {
+        deleteId = id;
+        document.getElementById("deleteModal").style.display = "flex";
+      };
+
+      document.getElementById("viewDrawer").classList.add("active");
     });
-  </script>
+}
+
+                function closeDrawer() {
+                  document.getElementById("viewDrawer").classList.remove("active");
+                }
+
+                function closeDelete() {
+                  document.getElementById("deleteModal").style.display = "none";
+                }
+
+                function confirmDelete() {
+                  if (deleteId) {
+                    window.location.href = "/developers/delete/" + deleteId;
+                  }
+                }
+
+                document.querySelectorAll(".toast").forEach(toast => {
+                  setTimeout(() => {
+                    toast.style.display = "none";
+                  }, 3000);
+                });
+
+              </script>
 
 </body>
+
 </html>
