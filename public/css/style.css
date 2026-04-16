@@ -123,8 +123,7 @@ body.login-page {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
-  padding: 30px 0 0 0;
+  padding: 30px 0 0;
   width: 100%;
 }
 
@@ -182,11 +181,6 @@ body.login-page {
   font-weight: 700;
   margin-bottom: 30px;
   color: #111827;
-}
-
-.form-group {
-  margin-bottom: 18px;
-
 }
 
 .form-group label {
@@ -405,9 +399,6 @@ button {
 }
 
 /* ================= ACTIONS ================= */
-.actions {
-  text-align: right;
-}
 
 .dataTables_info {
   padding-left: 4px;
@@ -478,8 +469,10 @@ input[type="checkbox"] {
 }
 
 .actions {
-  text-align: right;
-  position: relative;
+   text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /* ================= PAGINATION ================= */
@@ -536,7 +529,22 @@ input[type="checkbox"] {
 
 /* DROPDOWN */
 .dropdown {
-  position: relative;
+  position: absolute;
+  right: 0;
+  top: 32px;
+
+  background: #fff;
+  border-radius: 10px;
+  min-width: 150px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+
+  display: none;
+  z-index: 9999;
+  padding: 6px 0;
+
+  animation: fadeIn 0.2s ease;
 }
 
 .dropdown-toggle {
@@ -621,10 +629,6 @@ input[type="checkbox"] {
   max-width: 100%;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
 .form-group label {
   display: block;
   margin-bottom: 5px;
@@ -672,8 +676,9 @@ input[type="checkbox"] {
 }
 
 .form-group {
-  display: flex;
+   display: flex;
   flex-direction: column;
+  margin-bottom: 15px;
 }
 
 /* Full width fields */
@@ -966,20 +971,7 @@ textarea,
 }
 
 .client-form textarea {
-  width: 100%;
-  height: 44px;             
-  padding: 12px 14px;       
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-
-  line-height: 1.2;       
-  display: flex;
-  align-items: center;
-
-  resize: none;
-  overflow-y: auto;
+  min-height: 100px;
 }
 
 /* CUSTOM SELECT */
@@ -1055,8 +1047,6 @@ textarea,
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  transition: 0.3s ease;
-  z-index: 999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -1394,9 +1384,6 @@ textarea,
   transition: background 0.2s ease;
 }
 
-.custom-table tbody tr:hover {
-  background: #f9fafb;
-}
 
 /* Hover */
 .client-card:hover {
@@ -1503,6 +1490,18 @@ textarea,
   font-size: 12px;
   color: #9ca3af;
   margin: 0;
+}
+
+.menu-toggle {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 18px;
+  color: #6b7280;
+  padding: 6px;
+}
+
+.menu-toggle:hover {
+  color: #111827;
 }
 
 table.dataTable tbody tr {
@@ -1623,25 +1622,6 @@ table.dataTable tbody tr {
   padding: 0;
 }
 
-/* Left side (Showing entries) */
-.dataTables_wrapper .dataTables_info {
-  float: left;
-  margin-top: 15px;
-}
-
-/* Right side (Pagination) */
-.dataTables_wrapper .dataTables_paginate {
-  float: right;
-  margin-top: 10px;
-}
-
-/* Clear floats (important) */
-.dataTables_wrapper::after {
-  content: "";
-  display: block;
-  clear: both;
-}
-
 /* Table takes available space */
 .dataTables_wrapper .dataTables_scroll,
 .dataTables_wrapper table {
@@ -1650,10 +1630,10 @@ table.dataTable tbody tr {
 
 /* Bottom bar (THIS is the key) */
 .dataTables_wrapper .bottom {
-  display: flex;
+ display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;           /* push to bottom */
+  margin-top: auto;
   padding: 14px 18px;
   border-top: 1px solid var(--border);
   background: #fff;
@@ -1683,13 +1663,12 @@ table.dataTable tbody tr {
 .table-wrapper {
   background: #fff;
   border-radius: 12px;
-  border: 1px solid #f1f5f9;   /* lighter border */
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 
   flex: 1;
-  display: block;
+  display: flex;
   flex-direction: column;
-  height: auto;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -1860,19 +1839,18 @@ table.dataTable tbody tr {
   padding: 6px 0;
   min-width: 140px;
 }
-/* THIS IS MAIN FIX */
-#servicesTable .dropdown-item {
-  display: flex !important;      /* override inline */
+.dropdown-item {
+  display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;                   /* take full width */
   padding: 10px 14px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
 
-  text-decoration: none !important;  /* ❌ remove underline */
-  color: #333 !important;
-
-  border: none;
-  background: transparent;
+.dropdown-item:hover {
+  background: #f3f4f6;
 }
 
 #servicesTable .dropdown-item i {
@@ -1955,6 +1933,76 @@ table.dataTable tbody tr {
   border: 1px solid #ef4444;
   color: #ef4444;
   background: #fff;
+}
+
+/* ================= SAVE CONFIRM MODAL ================= */
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+/* BOX */
+.confirm-box {
+  width: 650px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  border-left: 6px solid #3b82f6;
+}
+
+/* HEADER */
+.confirm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirm-header h2 {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* TEXT */
+.confirm-text {
+  margin: 15px 0 25px;
+  font-size: 18px;
+  color: #374151;
+}
+
+/* ACTIONS */
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* BUTTONS */
+.confirm-actions .cancel-btn {
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+}
+
+.confirm-actions .confirm-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.confirm-actions button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 

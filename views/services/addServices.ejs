@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Add Service</title>
+  <title><%= service ? "Edit Service" : "Add Service" %></title>
   <link rel="stylesheet" href="/css/style.css">
 
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -39,18 +39,25 @@
       <div class="breadcrumb">
         <a href="/dashboard">Dashboard</a> /
         <a href="/services">Services</a> /
-        <span class="crumb-current">Add Service</span>
+        <span class="crumb-current">
+          <%= service ? "Edit Service" : "Add Service" %>
+        </span>
       </div>
 
       <!-- TITLE -->
       <div class="page-header-new">
-        <h1>Add Service</h1>
+        <h1><%= service ? "Edit Service" : "Add Service" %></h1>
       </div>
 
       <!-- FORM CARD -->
       <div class="form-card">
 
-        <form action="/services/add" method="POST" class="client-form">
+        <form 
+          id="serviceForm"
+          action="<%= service ? '/services/update/' + service._id : '/services/add' %>" 
+          method="POST" 
+          class="client-form"
+        >
 
           <!-- NAME -->
           <div class="form-group" style="grid-column: span 2;">
@@ -60,6 +67,7 @@
               name="name" 
               placeholder="Enter Service Name" 
               required
+              value="<%= service ? service.name : '' %>"
             >
           </div>
 
@@ -68,7 +76,7 @@
             <a href="/services" class="cancel-btn">Cancel</a>
 
             <button type="submit" class="save-btn">
-              Save Service
+              <%= service ? "Update Service" : "Save Service" %>
             </button>
           </div>
 
@@ -81,6 +89,69 @@
   </div>
 
 </div>
+
+<!-- ✅ SAVE / UPDATE CONFIRM MODAL -->
+<div id="saveModal" class="confirm-modal" style="display:none;">
+  <div class="confirm-box" id="confirmBox">
+
+    <div class="confirm-header">
+      <h2 id="confirmTitle">Confirm</h2>
+      <span class="close-btn" onclick="closeSave()">×</span>
+    </div>
+
+    <p class="confirm-text" id="confirmText">
+      Do you really want to save this service?
+    </p>
+
+    <div class="confirm-actions">
+      <button class="cancel-btn" onclick="closeSave()">Cancel</button>
+      <button class="confirm-btn" id="confirmBtn" onclick="confirmSave()">Confirm</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+  let formToSubmit = null;
+
+  // detect mode from EJS (BEST way)
+  const isEdit = <%= service ? 'true' : 'false' %>;
+
+  // INTERCEPT FORM SUBMIT
+  $('#serviceForm').on('submit', function(e) {
+    e.preventDefault();
+    formToSubmit = this;
+
+    if (isEdit) {
+      // UPDATE MODE (orange)
+      $('#confirmText').text('Do you really want to update this service?');
+      $('#confirmBox').css('border-left', '6px solid #f59e0b');
+      $('#confirmTitle').css('color', '#f59e0b');
+      $('#confirmBtn').css('background', '#f59e0b');
+    } else {
+      // SAVE MODE (blue)
+      $('#confirmText').text('Do you really want to save this service?');
+      $('#confirmBox').css('border-left', '6px solid #3b82f6');
+      $('#confirmTitle').css('color', '#3b82f6');
+      $('#confirmBtn').css('background', '#3b82f6');
+    }
+
+    $('#saveModal').css('display', 'flex');
+  });
+
+  function closeSave() {
+    formToSubmit = null;
+    $('#saveModal').hide();
+  }
+
+  function confirmSave() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  }
+</script>
 
 </body>
 </html>

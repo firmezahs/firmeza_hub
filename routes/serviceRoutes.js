@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
   try {
     const services = await Service.find().sort({ createdAt: -1 });
 
-    res.render('services/services', { services }); // 🔥 PASS DATA
+    res.render('services/services', { services }); 
   } catch (err) {
     console.error(err);
     res.send("Error loading services");
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/add', (req, res) => {
-  res.render('services/addServices');
+  res.render('services/addServices', { service: null });
 });
 
 router.post('/add', async (req, res) => {
@@ -30,17 +30,12 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.get('/view/:id', async (req, res) => {
-  const service = await Service.findById(req.params.id);
-  res.render('services/viewService', { service });
-});
-
 router.get('/edit/:id', async (req, res) => {
   const service = await Service.findById(req.params.id);
-  res.render('services/editService', { service });
+  res.render('services/addServices', { service });
 });
 
-router.post('/edit/:id', async (req, res) => {
+router.post('/update/:id', async (req, res) => {
   await Service.findByIdAndUpdate(req.params.id, {
     name: req.body.name
   });

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -39,18 +40,18 @@
                 <input type="text" id="customSearch" placeholder="Search..." />
               </div>
 
-        <div class="right-controls">
-          <button class="add-btn" onclick="window.location.href='/clients/add'">
-            <i class="ri-add-line"></i> Add Client
-          </button>
+              <div class="right-controls">
+                <button class="add-btn" onclick="window.location.href='/clients/add'">
+                  <i class="ri-add-line"></i> Add Client
+                </button>
 
-          <select id="entriesDropdown" class="entries-dropdown">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-          </select>
-        </div>
-      </div>
+                <select id="entriesDropdown" class="entries-dropdown">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
 
             <!-- TABLE -->
             <div class="table-wrapper">
@@ -106,11 +107,12 @@
                         <%= client.companyName %>
                       </td>
 
+                      <!-- ✅ FIXED -->
                       <td class="actions">
-                        <div class="dropdown">
-                          <i class="ri-more-2-fill dropdown-toggle"></i>
+                        <div class="action-menu">
+                          <i class="ri-more-2-fill menu-toggle"></i>
 
-                          <div class="dropdown-menu">
+                          <div class="dropdown">
                             <div class="dropdown-item action-click" data-action="view" data-id="<%= client._id %>">
                               <i class="ri-eye-line"></i> View
                             </div>
@@ -124,7 +126,6 @@
                               <i class="ri-delete-bin-6-line"></i> Delete
                             </div>
                           </div>
-
                         </div>
                       </td>
 
@@ -137,9 +138,11 @@
 
           </div>
       </div>
+
   </div>
 
   <!-- DELETE MODAL -->
+
   <div id="deleteModal" class="modal">
     <div class="modal-content modern">
       <h3>Confirm Delete</h3>
@@ -150,33 +153,36 @@
         <button onclick="confirmDelete()" class="delete-btn">Delete</button>
       </div>
     </div>
+
   </div>
 
   <!-- VIEW DRAWER -->
+
   <div id="viewDrawer" class="drawer">
     <div class="drawer-content">
 
       <div style="padding:10px;">
         <button onclick="closeViewDrawer()" style="
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    border:1.5px solid #5b5cff;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-  ">
-          <i class="ri-arrow-left-line" style="color:#5b5cff;"></i>
-        </button>
+width:40px;
+height:40px;
+border-radius:50%;
+border:1.5px solid #5b5cff;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+
+"> <i class="ri-arrow-left-line" style="color:#5b5cff;"></i> </button>
       </div>
 
       <div id="viewDrawerBody">Loading...</div>
     </div>
+
   </div>
 
-  <!-- ✅ IMAGE PREVIEW MODAL -->
+  <!-- IMAGE PREVIEW MODAL -->
+
   <div id="imagePreviewModal" style="
   display:none;
   position:fixed;
@@ -199,10 +205,12 @@
   ">&times;</span>
 
     <img id="previewImage" style="
-    max-width:90%;
-    max-height:90%;
-    border-radius:10px;
-  ">
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+
+">
+
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -219,15 +227,15 @@
       });
     });
 
-    // DROPDOWN
-    $(document).on('click', '.dropdown-toggle', function (e) {
+    // ✅ FIXED DROPDOWN JS
+    $(document).on('click', '.menu-toggle', function (e) {
       e.stopPropagation();
-      $('.dropdown-menu').hide();
-      $(this).siblings('.dropdown-menu').toggle();
+      $('.dropdown').hide();
+      $(this).siblings('.dropdown').toggle();
     });
 
     $(document).on('click', function () {
-      $('.dropdown-menu').hide();
+      $('.dropdown').hide();
     });
 
     // ACTION HANDLER
@@ -253,7 +261,6 @@
       }
     });
 
-    // VIEW
     function openViewDrawer(id) {
       const drawer = document.getElementById("viewDrawer");
       const body = document.getElementById("viewDrawerBody");
@@ -264,7 +271,6 @@
       fetch("/clients/view/" + id)
         .then(res => res.json())
         .then(data => {
-
           body.innerHTML = `
         <div class="view-top-bar">
           <div class="view-actions">
@@ -303,7 +309,6 @@
         });
     }
 
-    // IMAGE PREVIEW
     function openImagePreview(src) {
       document.getElementById("previewImage").src = src;
       document.getElementById("imagePreviewModal").style.display = "flex";
@@ -313,12 +318,10 @@
       document.getElementById("imagePreviewModal").style.display = "none";
     }
 
-    // CLOSE DRAWER
     function closeViewDrawer() {
       document.getElementById("viewDrawer").classList.remove("active");
     }
 
-    // DELETE
     function closeDelete() {
       $('#deleteModal').hide();
     }

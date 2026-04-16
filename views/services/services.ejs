@@ -16,116 +16,112 @@
 
     <%- include('../partials/sidebar', { activePage: 'services' }) %>
 
-      <div class="main-new">
-        <%- include('../partials/header') %>
+    <div class="main-new">
+      <%- include('../partials/header') %>
 
-          <div class="content-area">
+      <div class="content-area">
 
-            <p class="breadcrumb">
-              <a href="/dashboard">Dashboard</a> /
-              <a href="/services" class="active">Services</a>
-            </p>
+        <p class="breadcrumb">
+          <a href="/dashboard">Dashboard</a> /
+          <a href="/services" class="active">Services</a>
+        </p>
 
-            <div class="page-header-new">
-              <h1>Services <span class="badge">
-                  <%= services?.length || 0 %>
-                </span></h1>
-            </div>
+        <div class="page-header-new">
+          <h1>Services <span class="badge">
+              <%= services?.length || 0 %>
+            </span></h1>
+        </div>
 
-            <!-- SEARCH -->
-            <div class="filter-bar">
-              <div class="search-box">
-                <i class="ri-search-line"></i>
-                <input type="text" id="customSearch" placeholder="Search..." />
-              </div>
-
-              <!-- ✅ SAME STRUCTURE AS CLIENTS -->
-              <div class="right-controls">
-                <button class="add-btn" onclick="window.location.href='/services/add'">
-                  <i class="ri-add-line"></i> Add Service
-                </button>
-
-                <select id="entriesDropdown" class="entries-dropdown">
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- TABLE -->
-            <div class="table-wrapper">
-              <table id="servicesTable" class="custom-table">
-
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
-                    <th>Service</th>
-                    <th>Created</th>
-                    <th>Updated</th>
-                    <th></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% services.forEach(service=> { %>
-                    <tr>
-
-                      <td><input type="checkbox" class="rowCheckbox"></td>
-
-                      <td>
-                        <div class="client-main">
-                          <div class="client-info">
-                            <p class="client-code">#<%= service.serviceId %></p>
-                            <p class="client-name action-click" data-id="<%= service._id %>" data-action="view">
-                              <%= service.name %>
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>
-                        <%= new Date(service.createdAt).toLocaleDateString() %>
-                      </td>
-                      <td>
-                        <%= new Date(service.updatedAt).toLocaleDateString() %>
-                      </td>
-
-                      <!-- ✅ YOUR ORIGINAL 3-DOTS MENU (UNCHANGED) -->
-                      <td class="actions">
-                        <div class="action-menu">
-                          <i class="ri-more-2-fill menu-toggle"></i>
-
-                          <div class="dropdown">
-                            <div class="dropdown-item action-click" data-action="view" data-id="<%= service._id %>">
-                              <i class="ri-eye-line"></i> View
-                            </div>
-
-                            <div class="dropdown-item action-click" data-action="edit" data-id="<%= service._id %>">
-                              <i class="ri-edit-line"></i> Edit
-                            </div>
-
-                            <div class="dropdown-item action-click delete-text" data-action="delete"
-                              data-id="<%= service._id %>">
-                              <i class="ri-delete-bin-6-line"></i> Delete
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-
-                    </tr>
-                    <% }) %>
-                </tbody>
-
-              </table>
-            </div>
-
+        <!-- SEARCH -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="ri-search-line"></i>
+            <input type="text" id="customSearch" placeholder="Search..." />
           </div>
+
+          <div class="right-controls">
+            <button class="add-btn" onclick="window.location.href='/services/add'">
+              <i class="ri-add-line"></i> Add Service
+            </button>
+
+            <select id="entriesDropdown" class="entries-dropdown">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+          <table id="servicesTable" class="custom-table">
+
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>Service</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% services.forEach(service=> { %>
+                <tr>
+
+                  <td><input type="checkbox" class="rowCheckbox"></td>
+
+                  <td>
+                    <div class="client-main">
+                      <div class="client-info">
+                        <p class="client-code">#<%= service.serviceId %></p>
+                        <p class="client-name">
+                          <%= service.name %>
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <%= new Date(service.createdAt).toLocaleDateString() %>
+                  </td>
+                  <td>
+                    <%= new Date(service.updatedAt).toLocaleDateString() %>
+                  </td>
+
+                  <td class="actions">
+                    <div class="action-menu">
+                      <i class="ri-more-2-fill menu-toggle"></i>
+
+                      <div class="dropdown">
+
+                        <div class="dropdown-item action-click" data-action="edit" data-id="<%= service._id %>">
+                          <i class="ri-edit-line"></i> Edit
+                        </div>
+
+                        <div class="dropdown-item action-click delete-text" data-action="delete"
+                          data-id="<%= service._id %>">
+                          <i class="ri-delete-bin-6-line"></i> Delete
+                        </div>
+
+                      </div>
+                    </div>
+                  </td>
+
+                </tr>
+                <% }) %>
+            </tbody>
+
+          </table>
+        </div>
+
       </div>
+    </div>
   </div>
 
-  <!-- DELETE MODAL -->
-  <div id="deleteModal" class="modal">
+  <!-- ✅ DELETE MODAL -->
+  <div id="deleteModal" class="modal" style="display:none;">
     <div class="modal-content modern">
       <h3>Confirm Delete</h3>
       <p>Do you really want to delete?</p>
@@ -137,11 +133,25 @@
     </div>
   </div>
 
+  <!-- ✅ SAVE CONFIRM MODAL -->
+  <div id="saveModal" class="modal" style="display:none;">
+    <div class="modal-content modern">
+      <h3>Confirm</h3>
+      <p>Do you really want to save this service?</p>
+
+      <div class="modal-actions">
+        <button onclick="closeSave()">Cancel</button>
+        <button onclick="confirmSave()" class="confirm-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <script>
 
     let deleteId = null;
+    let formToSubmit = null;
 
     // SEARCH
     $('#customSearch').on('keyup', function () {
@@ -151,7 +161,7 @@
       });
     });
 
-    // ✅ KEEP YOUR MENU TOGGLE WORKING
+    // MENU TOGGLE
     $(document).on('click', '.menu-toggle', function (e) {
       e.stopPropagation();
       $('.dropdown').hide();
@@ -171,10 +181,6 @@
 
       if (!id || !action) return;
 
-      if (action === 'view') {
-        window.location.href = "/services/view/" + id;
-      }
-
       if (action === 'edit') {
         window.location.href = "/services/edit/" + id;
       }
@@ -187,12 +193,30 @@
 
     // DELETE
     function closeDelete() {
+      deleteId = null;
       $('#deleteModal').hide();
     }
 
     function confirmDelete() {
       if (deleteId) {
         window.location.href = "/services/delete/" + deleteId;
+      }
+    }
+
+    // SAVE MODAL (Reusable for forms)
+    function openSaveModal(form) {
+      formToSubmit = form;
+      $('#saveModal').css('display', 'flex');
+    }
+
+    function closeSave() {
+      formToSubmit = null;
+      $('#saveModal').hide();
+    }
+
+    function confirmSave() {
+      if (formToSubmit) {
+        formToSubmit.submit();
       }
     }
 
