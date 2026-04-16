@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Service</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-new">
+    <h2>Firmeza</h2>
+
+    <a href="/dashboard"><i class="ri-home-4-fill"></i> Dashboard</a>
+    <a href="/clients"><i class="ri-user-fill"></i> Clients</a>
+    <a href="/developers"><i class="ri-user-fill"></i> Developers</a>
+
+    <a class="active" href="/services">
+      <i class="ri-customer-service-2-line"></i> Services
+    </a>
+
+    <a><i class="ri-file-list-3-line"></i> Agreements</a>
+    <a><i class="ri-box-3-line"></i> Products</a>
+    <a href="/auth/logout"><i class="ri-logout-box-r-line"></i> Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-new">
+
+    <%- include('../partials/header') %>
+
+    <div class="content-area">
+
+      <!-- BREADCRUMB -->
+      <div class="breadcrumb">
+        <a href="/dashboard">Dashboard</a> /
+        <a href="/services">Services</a> /
+        <span class="crumb-current">Add Service</span>
+      </div>
+
+      <!-- TITLE -->
+      <div class="page-header-new">
+        <h1>Add Service</h1>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-card">
+
+        <form action="/services/add" method="POST" class="client-form">
+
+          <!-- NAME -->
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              name="name" 
+              placeholder="Enter Service Name" 
+              required
+            >
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="form-actions">
+            <a href="/services" class="cancel-btn">Cancel</a>
+
+            <button type="submit" class="save-btn">
+              Save Service
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

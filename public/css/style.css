@@ -123,6 +123,9 @@ body.login-page {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-top: 20px;
+  padding: 30px 0 0 0;
+  width: 100%;
 }
 
 /* ================= LOGIN PAGE ================= */
@@ -338,39 +341,36 @@ button {
 }
 
 .add-btn {
-  padding: 8px 16px;
-  border-radius: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;              
   font-size: 14px;
   font-weight: 500;
-  background: white;
-  color: var(--primary);
-  border: 1.5px solid var(--primary);
-  display: flex;
+  background: transparent;
+  color: #6366f1;                  
+  border: 1px solid #6366f1; 
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  text-decoration: none;
   transition: all 0.2s ease;
 }
 
 /* hover effect */
 .add-btn:hover {
-  background: var(--primary);
+  background: #6366f1;
   color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 .add-btn i {
-  font-size: 16px;
+  font-size: 18px;
 }
 
-/* ================= TABLE ================= */
-.table-wrapper {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  flex: 1;
-  display: flex;          /* 🔥 important */
-  flex-direction: column; /* 🔥 important */
+.add-btn:active {
+  transform: scale(0.98);
 }
+
 
 .client-card:last-child {
   border-bottom: none;
@@ -379,28 +379,24 @@ button {
 .custom-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
 .custom-table thead {
   background: #f9fafb;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .custom-table th {
-  text-align: left;
-  padding: 14px;
   font-size: 13px;
-  color: var(--text-light);
   font-weight: 500;
+  color: #9ca3af;   /* lighter gray */
 }
 
-.custom-table td {
-  padding: 12px 14px;
-  border-top: 1px solid var(--border);
-  color: var(--text-main);
-}
-
-.custom-table tbody tr:hover {
-  background: #f9fafb;
+.custom-table th:first-child,
+.custom-table td:first-child {
+  width: 40px;
+  text-align: center;
 }
 
 .custom-table {
@@ -410,42 +406,47 @@ button {
 
 /* ================= ACTIONS ================= */
 .actions {
-  justify-content: flex-end;
-  cursor: pointer;
+  text-align: right;
 }
 
 .dataTables_info {
   padding-left: 4px;
+  margin-top: auto;
 }
 
 .dataTables_paginate {
   padding-right: 4px;
+  margin-top: 10px;
 }
 
 .clientsTable {
   width: 100% !important;
-  table-layout: fixed;   /* ✅ FIX spacing issue */
+  border-collapse: collapse;
 }
 
 .clientsTable th:nth-child(1),
 .clientsTable td:nth-child(1) {
-  width: 40%;   /* Client */
+  width: 5%;   /* checkbox */
 }
 
 .clientsTable th:nth-child(2),
 .clientsTable td:nth-child(2) {
-  width: 25%;   /* Company */
+  width: 35%;  /* client */
 }
 
 .clientsTable th:nth-child(3),
 .clientsTable td:nth-child(3) {
-  width: 25%;   /* Email */
+  width: 30%;  /* email */
 }
 
 .clientsTable th:nth-child(4),
 .clientsTable td:nth-child(4) {
-  width: 10%;   /* Actions (3 dots) */
-  text-align: right;
+  width: 25%;  /* company */
+}
+
+.clientsTable th:nth-child(5),
+.clientsTable td:nth-child(5) {
+  width: 5%;   /* actions */
 }
 
 .actions i:hover {
@@ -454,19 +455,31 @@ button {
 
 /* ================= STATUS ================= */
 .status {
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 5px 12px;
   font-size: 12px;
+  border-radius: 999px;
+  font-weight: 500;
 }
 
 .status.active {
-  background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .status.inactive {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.actions {
+  text-align: right;
+  position: relative;
 }
 
 /* ================= PAGINATION ================= */
@@ -475,7 +488,7 @@ button {
   justify-content: space-between;
   align-items: center;
 
-  margin-top: auto;   /* 🔥 KEY FIX */
+  margin-top: auto;  
   padding: 14px 18px;
   border-top: 1px solid var(--border);
   background: #fff;
@@ -519,12 +532,6 @@ button {
 .dots {
   padding: 0 5px;
   color: var(--text-light);
-}
-
-.content-area {
-  padding-top: 20px;
-  padding: 30px 0 0 0;
-  width: 100%;
 }
 
 /* DROPDOWN */
@@ -959,13 +966,20 @@ textarea,
 }
 
 .client-form textarea {
-  height: 44px;
-  min-height: 44px;
-  max-height: 150px;
-  overflow-y: hidden;
+  width: 100%;
+  height: 44px;             
+  padding: 12px 14px;       
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+
+  line-height: 1.2;       
+  display: flex;
+  align-items: center;
+
   resize: none;
-  line-height: 1.5;
-  transition: height 0.15s ease;
+  overflow-y: auto;
 }
 
 /* CUSTOM SELECT */
@@ -1375,15 +1389,13 @@ textarea,
   background: #fff;
 }
 
-.client-card {
-  display: grid;
-  grid-template-columns: 2.2fr 1.2fr 1.6fr 60px;
-  gap: 10px;
-  align-items: center;
-  width: 100%;
-  padding: 14px 18px;              /* ✅ add spacing inside row */
-  border-bottom: 1px solid var(--border); /* ✅ row divider */
-  background: #fff;
+.custom-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background: #f9fafb;
 }
 
 /* Hover */
@@ -1416,11 +1428,11 @@ textarea,
 
 /* ===== LEFT MAIN (FIXED) ===== */
 .client-main {
- display: grid !important;
-  grid-template-columns: 44px 1fr;
-  column-gap: 10px;  /* ✅ increase from 8 → 12 */
+  display: flex !important;
   align-items: center;
+  gap: 12px;
 }
+
 
 .client-table-header {
   display: grid;
@@ -1428,8 +1440,8 @@ textarea,
   gap: 10px;
   align-items: center;
   width: 100%;
-  padding: 14px 18px;              /* ✅ same as rows */
-  background: #f9fafb;             /* ✅ light header bg */
+  padding: 14px 18px;              
+  background: #f9fafb;             
   border: 1px solid var(--border);
   border-bottom: none;
   border-radius: 12px 12px 0 0;
@@ -1443,9 +1455,9 @@ textarea,
 
 /* Avatar container */
 .client-avatar {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 40px;
+  height: 40px;
+   min-width: 40px;
   border-radius: 50%;
   overflow: hidden;
   background: #e5e7eb;
@@ -1476,25 +1488,48 @@ textarea,
 }
 
 .client-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
   margin: 0;
 }
 
 .client-code {
   font-size: 11px;
-  color: #6b7280;
-  font-style: italic;
+  color: #9ca3af;
   margin: 0;
-  line-height: 1.2;
 }
 
 .client-country {
   font-size: 12px;
   color: #9ca3af;
   margin: 0;
-  line-height: 1.2;
+}
+
+table.dataTable tbody tr {
+  background-color: #fff !important;
+}
+
+.custom-table td,
+.custom-table th {
+  text-align: left;
+}
+
+.status-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-inactive {
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 /* Labels */
@@ -1503,29 +1538,11 @@ textarea,
   color: #9ca3af;
 }
 
-/* 🔥 FIX: Align logo + text like design */
-
-.client-main {
-  display: grid !important;
-  grid-template-columns: 60px 1fr;
-  column-gap: 8px;
-  align-items: center;
-}
-
-/* Avatar stays in first column */
-.client-avatar {
-  grid-row: span 3;
-  width: 44px;
-  height: 44px;
-  /* 🔥 makes logo cover all text rows */
-}
-
-/* Make text break into rows */
 .client-info {
-  display: flex;
+    display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;   /* ✅ was too tight */
+  line-height: 1.2;
 }
 
 /* Each text line becomes its own row */
@@ -1535,24 +1552,13 @@ textarea,
   color: #9ca3af;
 }
 
-.client-name {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.client-country {
-  font-size: 12px;
-  color: #9ca3af;
-  margin: 0;
-  line-height: 1.2;
-}
-
 .dataTables_wrapper {
-  display: flex !important;
+  display: block !important;
   flex-direction: column;
+  height: 100%;
   flex: 1;
+  margin-top: 10px;
+  position: relative;
 }
 
 .dataTables_wrapper .dataTables_scroll {
@@ -1561,34 +1567,396 @@ textarea,
 
 .dataTables_wrapper .dataTables_info,
 .dataTables_wrapper .dataTables_paginate {
-  margin-top: auto;
-  padding: 12px 18px;
+  margin: 0;
+  padding: 0;
 }
 
 .table-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;   /* ✅ space from table */
+  margin-top: 12px;   
   padding: 10px 4px;
-}
-
-.dataTables_wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
 }
 
 /* Push info + pagination away from table */
 .dataTables_wrapper .dataTables_info {
-  padding: 12px 18px;
-  margin-top: 10px;
+  order: 2;
 }
 
 .dataTables_wrapper .dataTables_paginate {
-  padding: 12px 18px;
-  margin-bottom: 10px;
+  order: 3;
 }
+
+/* Search box */
+.dataTables_filter input {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-left: 5px;
+}
+
+/* Pagination buttons */
+.dataTables_paginate .paginate_button {
+  border-radius: 6px !important;
+  padding: 5px 10px !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+  background: #6366f1 !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Table look */
+#servicesTable {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ================= DATATABLE FOOTER FIX ================= */
+
+/* Create a single row for info + pagination */
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  margin: 0;
+  padding: 0;
+}
+
+/* Left side (Showing entries) */
+.dataTables_wrapper .dataTables_info {
+  float: left;
+  margin-top: 15px;
+}
+
+/* Right side (Pagination) */
+.dataTables_wrapper .dataTables_paginate {
+  float: right;
+  margin-top: 10px;
+}
+
+/* Clear floats (important) */
+.dataTables_wrapper::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Table takes available space */
+.dataTables_wrapper .dataTables_scroll,
+.dataTables_wrapper table {
+  flex: 1;
+}
+
+/* Bottom bar (THIS is the key) */
+.dataTables_wrapper .bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;           /* push to bottom */
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+/* Remove weird spacing */
+.dataTables_info {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.dataTables_paginate {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Reduce table row height */
+.custom-table td {
+  padding: 12px 16px !important;
+}
+
+.custom-table th {
+  padding: 12px 16px !important;
+}
+
+/* Make wrapper fill available space */
+.table-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;   /* lighter border */
+  overflow: hidden;
+
+  flex: 1;
+  display: block;
+  flex-direction: column;
+  height: auto;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border: none !important;
+  background: transparent !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: #eef2ff !important;
+  color: #6366f1 !important;
+  border-radius: 6px;
+}
+
+/* Bottom bar */
+.dataTables_wrapper .bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+.breadcrumb a {
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.breadcrumb a.active {
+  color: #111827;
+  font-weight: 600;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.view-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.view-avatar {
+  width: 100px;
+  height: 100px;
+  background: #e5e7eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.avatar-placeholder {
+  font-size: 32px;
+  color: #555;
+}
+
+.view-info {
+  margin-top: 20px;
+}
+
+.info-row {
+  margin-bottom: 15px;
+}
+
+.info-row span {
+  font-size: 12px;
+  color: #888;
+}
+
+.info-row p {
+  font-weight: 500;
+}
+
+.view-top-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.view-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.view-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.view-avatar-large {
+  width: 140px;
+  height: 140px;
+  background: #e5e7eb;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.view-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 40px;
+  color: #555;
+}
+
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding: 20px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+}
+
+.image-modal-content {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+.image-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* ===== ONLY FOR SERVICES PAGE ===== */
+
+#servicesTable .action-menu {
+  position: relative;
+  display: inline-block;
+}
+
+#servicesTable .menu-toggle {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* scoped dropdown */
+#servicesTable .dropdown {
+  display: none;
+  flex-direction: column;   /* 🔥 force vertical */
+  padding: 6px 0;
+  min-width: 140px;
+}
+/* THIS IS MAIN FIX */
+#servicesTable .dropdown-item {
+  display: flex !important;      /* override inline */
+  align-items: center;
+  gap: 10px;
+  width: 100%;                   /* take full width */
+  padding: 10px 14px;
+
+  text-decoration: none !important;  /* ❌ remove underline */
+  color: #333 !important;
+
+  border: none;
+  background: transparent;
+}
+
+#servicesTable .dropdown-item i {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+/* hover */
+#servicesTable .dropdown-item:hover {
+  background: #f3f4f6;
+}
+
+/* FIX dropdown visibility + overflow */
+#servicesTable td {
+  position: relative;
+  overflow: visible !important;
+}
+
+#servicesTable {
+  overflow: visible !important;
+}
+
+/* ===== FIX DROPDOWN ITEMS (MAKE ALL SAME LIKE VIEW) ===== */
+.dropdown-menu .dropdown-item {
+  color: #333 !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* Remove red/blue styles inside dropdown */
+.dropdown-menu .edit-btn,
+.dropdown-menu .delete-btn,
+.dropdown-menu .delete-text {
+  color: #333 !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* Uniform hover */
+.dropdown-menu .dropdown-item:hover {
+  background: #f3f4f6 !important;
+  color: #000 !important;
+}
+
+.view-actions .delete-btn-drawer {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.view-actions .edit-btn,
+.view-actions .delete-btn-drawer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 40px;             
+  padding: 0 18px;          
+  
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1; 
+  
+  border-radius: 8px;
+  box-sizing: border-box; 
+}
+
+/* specific colors */
+.view-actions .edit-btn {
+  border: 1px solid #6366f1;
+  color: #6366f1;
+  background: #fff;
+}
+
+.view-actions .delete-btn-drawer {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: #fff;
+}
+
 
 /* ANIMATION */
 @keyframes fadeIn {

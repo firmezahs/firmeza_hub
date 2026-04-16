@@ -56,7 +56,7 @@
 
                             <div class="custom-select">
                                 <div class="select-box" id="selectBox">
-                                    <span id="selectedText">Select Country</span>
+                                    <span id="selectedText"><%= client.country || "Select Country" %></span>
                                     <i class="ri-arrow-down-s-line"></i>
                                 </div>
 
@@ -157,105 +157,93 @@
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
 
     <script>
-        const input = document.querySelector("#mobileNumber");
+        document.addEventListener("DOMContentLoaded", function () {
 
-        const iti = window.intlTelInput(input, {
-            separateDialCode: true,
-            initialCountry: "auto",
-            preferredCountries: ["in", "us", "gb"],
-            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
-        });
+            const input = document.querySelector("#mobileNumber");
 
-        // IMPORTANT: set existing number properly
-        window.addEventListener("load", () => {
+            const iti = window.intlTelInput(input, {
+                separateDialCode: true,
+                initialCountry: "auto",
+                preferredCountries: ["in", "us", "gb"],
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"
+            });
+
             if (input.value) {
                 iti.setNumber(input.value);
             }
-        });
 
-        function confirmEdit() {
-            input.value = iti.getNumber();
-            document.getElementById("clientForm").submit();
-        }
+            window.confirmEdit = function () {
 
-        // ---------------- COUNTRY DROPDOWN FIX ----------------
-        const selectBox = document.getElementById("selectBox");
-        const dropdown = document.getElementById("dropdown");
-        const searchInput = document.getElementById("searchCountry");
-        const options = document.querySelectorAll(".option");
-        const selectedText = document.getElementById("selectedText");
-        const hiddenInput = document.getElementById("countryValue");
-
-        selectBox.addEventListener("click", () => {
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        });
-
-        options.forEach(option => {
-            option.addEventListener("click", function () {
-
-                const name = this.dataset.name;
-                const iso = this.dataset.iso;
-
-                selectedText.textContent = name;
-                hiddenInput.value = name;
-
-                dropdown.style.display = "none";
-
-                if (iso) {
-                    iti.setCountry(iso);
+                // ✅ NEW COUNTRY-BASED VALIDATION
+                if (!iti.isValidNumber()) {
+                    alert("Please enter a valid mobile number");
+                    return;
                 }
-            });
-        });
 
-        searchInput.addEventListener("input", function () {
-            const filter = this.value.toLowerCase();
+                input.value = iti.getNumber();
+                document.getElementById("clientForm").submit();
+            };
+
+            window.closeEditModal = function () {
+                document.getElementById("editModal").style.display = "none";
+            };
+
+            document.getElementById("submitBtn").addEventListener("click", function () {
+                document.getElementById("editModal").style.display = "flex";
+            });
+
+            // COUNTRY DROPDOWN
+            const selectBox = document.getElementById("selectBox");
+            const dropdown = document.getElementById("dropdown");
+            const searchInput = document.getElementById("searchCountry");
+            const options = document.querySelectorAll(".option");
+            const selectedText = document.getElementById("selectedText");
+            const hiddenInput = document.getElementById("countryValue");
+
+            selectBox.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
 
             options.forEach(option => {
-                option.style.display =
-                    option.textContent.toLowerCase().includes(filter)
-                        ? "block"
-                        : "none";
+                option.addEventListener("click", function () {
+
+                    const name = this.dataset.name;
+                    const iso = this.dataset.iso;
+
+                    selectedText.textContent = name;
+                    hiddenInput.value = name;
+
+                    dropdown.style.display = "none";
+
+                    if (iso) iti.setCountry(iso);
+                });
             });
+
+            searchInput.addEventListener("input", function () {
+                const filter = this.value.toLowerCase();
+
+                options.forEach(option => {
+                    option.style.display =
+                        option.textContent.toLowerCase().includes(filter)
+                            ? "block"
+                            : "none";
+                });
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".custom-select")) {
+                    dropdown.style.display = "none";
+                }
+            });
+
+            // remove logo fix
+            window.removeLogo = function () {
+                document.getElementById("removeLogoInput").value = "true";
+                document.getElementById("logoPreview").style.display = "none";
+            };
+
         });
-
-        document.addEventListener("click", function (e) {
-            if (!e.target.closest(".custom-select")) {
-                dropdown.style.display = "none";
-            }
-        });
-
-        // 🔥 SET COUNTRY ON LOAD (FIXED)
-        window.addEventListener("load", function () {
-            const existing = hiddenInput.value;
-
-            const match = Array.from(options).find(opt =>
-                opt.dataset.name === existing
-            );
-
-            if (match && match.dataset.iso) {
-                iti.setCountry(match.dataset.iso);
-                selectedText.textContent = existing;
-            }
-        });
-
-        // sync back from phone
-        input.addEventListener("countrychange", function () {
-            const c = iti.getSelectedCountryData();
-            hiddenInput.value = c.name;
-            selectedText.textContent = c.name;
-        });
-
     </script>
-    <script>
-  document.getElementById("submitBtn").addEventListener("click", function () {
-    document.getElementById("editModal").style.display = "flex";
-  });
-
-  function closeEditModal() {
-    document.getElementById("editModal").style.display = "none";
-  }
-</script>
 
 </body>
-
 </html>

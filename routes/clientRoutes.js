@@ -188,10 +188,14 @@ router.get("/delete/:id", async (req, res) => {
 router.get("/view/:id", async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
+
+    if (!client) {
+      return res.status(404).json({ error: "Client not found" });
+    }
+
     res.json(client);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 export default router;

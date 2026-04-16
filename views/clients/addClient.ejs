@@ -100,6 +100,9 @@
                                         name="mobileNumber"
                                         placeholder="Enter Mobile Number"
                                         value="<%= formData.mobileNumber || '' %>">
+
+                                    <!-- ✅ NEW ERROR MESSAGE -->
+                                    <small id="mobileError" class="error-message"></small>
                                 </div>
 
                                 <div class="form-group">
@@ -193,15 +196,16 @@
             return /^[^ ]+@[^ ]+\.[a-z]{2,}$/.test(email);
         }
 
+        // ✅ UPDATED VALIDATION
         function checkFormValidity() {
             const name = document.getElementById("name").value.trim();
             const company = document.getElementById("companyName").value.trim();
             const email = emailInput.value.trim();
 
             const validEmail = validateEmailFormat(email);
-            const fullNumber = iti.getNumber();
+            const isValidNumber = iti.isValidNumber();
 
-            submitBtn.disabled = !(name && company && fullNumber && validEmail && !emailExists);
+            submitBtn.disabled = !(name && company && isValidNumber && validEmail && !emailExists);
         }
 
         submitBtn.addEventListener("click", () => {
@@ -212,6 +216,7 @@
             document.getElementById("saveModal").style.display = "none";
         }
 
+        // ✅ UPDATED SAVE
         function confirmSave() {
             const fullNumber = iti.getNumber();
             document.getElementById("mobileNumber").value = fullNumber;
@@ -224,6 +229,19 @@
         });
 
         input.addEventListener("input", checkFormValidity);
+
+        // ✅ SHOW ERROR MESSAGE
+        input.addEventListener("blur", function () {
+            const errorMsg = document.getElementById("mobileError");
+
+            if (input.value.trim() && !iti.isValidNumber()) {
+                errorMsg.textContent = "Invalid mobile number for selected country";
+                errorMsg.classList.add("show-error");
+            } else {
+                errorMsg.textContent = "";
+                errorMsg.classList.remove("show-error");
+            }
+        });
 
         const selectBox = document.getElementById("selectBox");
         const dropdown = document.getElementById("dropdown");

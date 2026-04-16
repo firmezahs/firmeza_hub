@@ -3,64 +3,41 @@
 
 <head>
   <title>Clients | Firmeza Hub</title>
+
   <link rel="stylesheet" href="/css/style.css">
 
-  <!-- FONT -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- ICONS -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
-  <!-- ✅ DataTables -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
 
-<div class="admin-container">
+  <div class="admin-container">
 
-  <% if (success) { %>
-    <div id="toast" class="toast success">
-      <i class="ri-checkbox-circle-line"></i>
-      <span><%= success %></span>
-    </div>
-  <% } %>
+    <%- include('../partials/sidebar', { activePage: activePage }) %>
 
-  <% if (error) { %>
-    <div id="toast" class="toast error">
-      <i class="ri-error-warning-line"></i>
-      <span><%= error %></span>
-    </div>
-  <% } %>
+      <div class="main-new">
+        <%- include('../partials/header') %>
 
-  <%- include('../partials/sidebar', { activePage: activePage }) %>
+          <div class="content-area">
 
-  <div class="main-new">
-    <%- include('../partials/header') %>
+            <p class="breadcrumb">
+              <a href="/dashboard">Dashboard</a> /
+              <a href="/clients" class="active">Clients</a>
+            </p>
 
-    <div class="content-area">
+            <div class="page-header-new">
+              <h1>Clients <span class="badge">
+                  <%= clients?.length || 0 %>
+                </span></h1>
+            </div>
 
-      <p class="breadcrumb">
-        <a href="/dashboard">Dashboard</a> /
-        <a href="/clients">Clients</a>
-      </p>
-
-      <div class="page-header-new">
-        <h1>
-          Clients
-          <span class="badge"><%= clients?.length || 0 %></span>
-        </h1>
-      </div>
-
-      <div class="filter-bar">
-        <div class="left-controls">
-          <div class="search-box">
-            <i class="ri-search-line"></i>
-            <input type="text" id="customSearch" placeholder="Search...">
-          </div>
-        </div>
+            <!-- SEARCH -->
+            <div class="filter-bar">
+              <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" id="customSearch" placeholder="Search..." />
+              </div>
 
         <div class="right-controls">
           <button class="add-btn" onclick="window.location.href='/clients/add'">
@@ -75,263 +52,285 @@
         </div>
       </div>
 
-      <div class="table-wrapper">
-        <table id="clientsTable" class="custom-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Company</th>
-              <th>Email</th>
-              <th></th>
-            </tr>
-          </thead>
+            <!-- TABLE -->
+            <div class="table-wrapper">
+              <table id="clientsTable" class="custom-table">
 
-          <tbody>
-            <% if (clients && clients.length > 0) { %>
-              <% clients.forEach(client => { %>
-                <tr>
-                  <td>
-                    <div class="client-main">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>Company</th>
+                    <th></th>
+                  </tr>
+                </thead>
 
-                      <div class="client-avatar">
-                        <% if (client.logo) { %>
-                          <img src="/uploads/<%= client.logo %>" class="client-logo">
-                        <% } else { %>
-                          <div class="client-logo placeholder">
-                            <%= client.name ? client.name.charAt(0).toUpperCase() : 'A' %>
+                <tbody>
+                  <% clients.forEach(client=> { %>
+                    <tr>
+
+                      <td><input type="checkbox" class="rowCheckbox"></td>
+
+                      <td>
+                        <div class="client-main">
+
+                          <div class="client-avatar">
+                            <% if (client.logo) { %>
+                              <img src="/uploads/<%= client.logo %>" class="client-logo">
+                              <% } else { %>
+                                <div class="client-logo placeholder">
+                                  <%= client.name.charAt(0).toUpperCase() %>
+                                </div>
+                                <% } %>
                           </div>
-                        <% } %>
-                      </div>
 
-                      <div class="client-info">
-                        <p class="client-code">#<%= client.clientId || '-' %></p>
+                          <div class="client-info">
+                            <p class="client-code">#<%= client.clientId %>
+                            </p>
+                            <p class="client-name action-click" data-id="<%= client._id %>" data-action="view">
+                              <%= client.name %>
+                            </p>
+                            <p class="client-country">
+                              <%= client.country %>
+                            </p>
+                          </div>
 
-                        <p class="client-name client-name-click"
-                           onclick="openViewDrawer('<%= client._id %>')">
-                          <%= client.name %>
-                        </p>
-
-                        <p class="client-country">
-                          <%= client.country || '-' %>
-                        </p>
-                      </div>
-
-                    </div>
-                  </td>
-
-                  <td><%= client.companyName %></td>
-                  <td><%= client.email %></td>
-
-                  <td class="actions">
-                    <div class="dropdown">
-                      <i class="ri-more-2-fill dropdown-toggle"></i>
-
-                      <div class="dropdown-menu">
-                        <div class="dropdown-item" onclick="openViewDrawer('<%= client._id %>')">
-                          <i class="ri-eye-line"></i> View
                         </div>
+                      </td>
 
-                        <div class="dropdown-item" onclick="editClient('<%= client._id %>')">
-                          <i class="ri-edit-line"></i> Edit
+                      <td>
+                        <%= client.email %>
+                      </td>
+                      <td>
+                        <%= client.companyName %>
+                      </td>
+
+                      <td class="actions">
+                        <div class="dropdown">
+                          <i class="ri-more-2-fill dropdown-toggle"></i>
+
+                          <div class="dropdown-menu">
+                            <div class="dropdown-item action-click" data-action="view" data-id="<%= client._id %>">
+                              <i class="ri-eye-line"></i> View
+                            </div>
+
+                            <div class="dropdown-item action-click" data-action="edit" data-id="<%= client._id %>">
+                              <i class="ri-edit-line"></i> Edit
+                            </div>
+
+                            <div class="dropdown-item action-click delete-text" data-action="delete"
+                              data-id="<%= client._id %>">
+                              <i class="ri-delete-bin-6-line"></i> Delete
+                            </div>
+                          </div>
+
                         </div>
+                      </td>
 
-                        <div class="dropdown-item delete-text"
-                             onclick="openDeleteModal('<%= client._id %>')">
-                          <i class="ri-delete-bin-6-line"></i> Delete
-                        </div>
-                      </div>
-                    </div>
-                  </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
 
-                </tr>
-              <% }) %>
-            <% } %>
-          </tbody>
-        </table>
+              </table>
+            </div>
+
+          </div>
+      </div>
+  </div>
+
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content modern">
+      <h3>Confirm Delete</h3>
+      <p>Do you really want to delete?</p>
+
+      <div class="modal-actions">
+        <button onclick="closeDelete()">Cancel</button>
+        <button onclick="confirmDelete()" class="delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW DRAWER -->
+  <div id="viewDrawer" class="drawer">
+    <div class="drawer-content">
+
+      <div style="padding:10px;">
+        <button onclick="closeViewDrawer()" style="
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1.5px solid #5b5cff;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  ">
+          <i class="ri-arrow-left-line" style="color:#5b5cff;"></i>
+        </button>
       </div>
 
+      <div id="viewDrawerBody">Loading...</div>
     </div>
   </div>
-</div>
 
-<!-- DELETE MODAL -->
-<div id="deleteModal" class="modal">
-  <div class="modal-content modern">
-    <div class="modal-header">
-      <h3>Confirm</h3>
-      <span class="close-btn" onclick="closeDeleteModal()">×</span>
-    </div>
+  <!-- ✅ IMAGE PREVIEW MODAL -->
+  <div id="imagePreviewModal" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+    <span onclick="closeImagePreview()" style="
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+  ">&times;</span>
 
-    <p>Do you really want to remove this item?</p>
-
-    <div class="modal-actions">
-      <button class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
-      <button class="delete-btn" onclick="confirmDeleteAction()">Confirm</button>
-    </div>
+    <img id="previewImage" style="
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+  ">
   </div>
-</div>
 
-<!-- VIEW DRAWER -->
-<div id="viewDrawer" class="drawer">
-  <div class="drawer-content modern-drawer">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <div class="drawer-top">
-      <button class="back-btn" onclick="closeDrawer()">
-        <i class="ri-arrow-left-s-line"></i>
-      </button>
-      <h2>View</h2>
-    </div>
+  <script>
 
-    <div class="drawer-actions">
-      <button class="edit-btn" onclick="goToEdit()">
-        <i class="ri-edit-line"></i> Edit
-      </button>
+    let deleteId = null;
 
-      <button class="delete-btn-outline" onclick="confirmDeleteFromDrawer()">
-        <i class="ri-delete-bin-line"></i> Delete
-      </button>
-    </div>
+    // SEARCH
+    $('#customSearch').on('keyup', function () {
+      let val = $(this).val().toLowerCase();
+      $('#clientsTable tbody tr').filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
+      });
+    });
 
-    <div class="drawer-image"></div>
-    <div id="drawerBody" class="drawer-body"></div>
+    // DROPDOWN
+    $(document).on('click', '.dropdown-toggle', function (e) {
+      e.stopPropagation();
+      $('.dropdown-menu').hide();
+      $(this).siblings('.dropdown-menu').toggle();
+    });
 
-  </div>
-</div>
+    $(document).on('click', function () {
+      $('.dropdown-menu').hide();
+    });
 
-<!-- IMAGE PREVIEW MODAL -->
-<div id="imageModal" class="image-modal">
-  <span class="close-preview" onclick="closeImagePreview()">×</span>
-  <img id="previewImg" class="preview-img">
-</div>
+    // ACTION HANDLER
+    $(document).on('click', '.action-click', function (e) {
+      e.stopPropagation();
 
-<!-- SCRIPTS -->
-<script>
-$(document).ready(function () {
-  const table = $('#clientsTable').DataTable({
-    pageLength: 10,
-    lengthChange: false,
-    ordering: true,
-    info: true,
-    dom: 't<"table-footer"ip>'
-  });
+      const id = $(this).data('id');
+      const action = $(this).data('action');
 
-  $('#customSearch').on('keyup', function () {
-    table.search(this.value).draw();
-  });
+      if (!id || !action) return;
 
-  $('#entriesDropdown').on('change', function () {
-    table.page.len(this.value).draw();
-  });
-});
-
-// dropdown
-$(document).on('click', '.dropdown-toggle', function (e) {
-  e.stopPropagation();
-  $('.dropdown-menu').hide();
-  $(this).siblings('.dropdown-menu').toggle();
-});
-
-$(document).on('click', function () {
-  $('.dropdown-menu').hide();
-});
-
-let selectedClientId = null;
-
-// ✅ FIXED VIEW
-function openViewDrawer(id) {
-  selectedClientId = id;
-
-  fetch(`/clients/view/${id}`)
-    .then(res => res.json())
-    .then(client => {
-
-      const body = document.getElementById("drawerBody");
-      const imageContainer = document.querySelector(".drawer-image");
-
-      if (client.logo) {
-        imageContainer.innerHTML = `
-          <img src="/uploads/${client.logo}" 
-               class="drawer-img clickable-img"
-               onclick="openImagePreview('/uploads/${client.logo}')">
-        `;
-      } else {
-        imageContainer.innerHTML = `<div class="image-placeholder"></div>`;
+      if (action === 'view') {
+        openViewDrawer(id);
       }
 
-      body.innerHTML = `
-        <div class="info-block"><span>Client ID</span><p>#${client.clientId || '-'}</p></div>
-        <div class="info-block"><span>Name</span><p>${client.name || '-'}</p></div>
-        <div class="info-block"><span>Company</span><p>${client.companyName || '-'}</p></div>
-        <div class="info-block"><span>Email</span><p>${client.email || '-'}</p></div>
-        <div class="info-block"><span>Country</span><p>${client.country || '-'}</p></div>
-      `;
+      if (action === 'edit') {
+        window.location.href = "/clients/edit/" + id;
+      }
 
-      document.getElementById("viewDrawer").classList.add("active");
+      if (action === 'delete') {
+        deleteId = id;
+        $('#deleteModal').css('display', 'flex');
+      }
     });
-}
 
-function openImagePreview(src) {
-  document.getElementById("previewImg").src = src;
-  document.getElementById("imageModal").style.display = "flex";
-}
+    // VIEW
+    function openViewDrawer(id) {
+      const drawer = document.getElementById("viewDrawer");
+      const body = document.getElementById("viewDrawerBody");
 
-function closeImagePreview() {
-  document.getElementById("imageModal").style.display = "none";
-}
+      drawer.classList.add("active");
+      body.innerHTML = "Loading...";
 
-function closeDrawer() {
-  document.getElementById("viewDrawer").classList.remove("active");
-}
+      fetch("/clients/view/" + id)
+        .then(res => res.json())
+        .then(data => {
 
-function editClient(id) {
-  window.location.href = `/clients/edit/${id}`;
-}
+          body.innerHTML = `
+        <div class="view-top-bar">
+          <div class="view-actions">
+            
+            <button class="action-click edit-btn" data-action="edit" data-id="${data._id}">
+              <i class="ri-edit-line"></i> Edit
+            </button>
 
-function goToEdit() {
-  if (selectedClientId) {
-    window.location.href = `/clients/edit/${selectedClientId}`;
-  }
-}
+           <button class="action-click delete-btn-drawer" data-action="delete" data-id="${data._id}">
+              <i class="ri-delete-bin-6-line"></i> Delete
+            </button>
 
-function openDeleteModal(id) {
-  selectedClientId = id;
-  document.getElementById("deleteModal").style.display = "flex";
-}
+          </div>
+        </div>
 
-function closeDeleteModal() {
-  document.getElementById("deleteModal").style.display = "none";
-}
+        <div class="view-avatar-wrapper">
+          <div class="view-avatar-large">
+            ${data.logo
+              ? `<img src="/uploads/${data.logo}" style="cursor:pointer;" onclick="openImagePreview('/uploads/${data.logo}')"/>`
+              : `<div class="avatar-placeholder">${(data.name || 'A').charAt(0).toUpperCase()}</div>`
+            }
+          </div>
+        </div>
 
-function confirmDeleteAction() {
-  if (selectedClientId) {
-    window.location.href = `/clients/delete/${selectedClientId}`;
-  }
-}
-
-function confirmDeleteFromDrawer() {
-  if (selectedClientId) {
-    closeDrawer(); // 👈 optional
-    document.getElementById("deleteModal").style.display = "flex";
-  }
-}
-</script>
-<script>
-  window.addEventListener("load", () => {
-    const toast = document.getElementById("toast");
-
-    if (toast) {
-      // show for 3 seconds
-      setTimeout(() => {
-        toast.classList.add("hide");
-
-        // remove from DOM after animation
-        setTimeout(() => {
-          toast.remove();
-        }, 400); // matches CSS animation
-      }, 3000);
+        <div class="view-info">
+          <div class="info-row"><span>Client ID</span><p>#${data.clientId || '-'}</p></div>
+          <div class="info-row"><span>Name</span><p>${data.name || '-'}</p></div>
+          <div class="info-row"><span>Company</span><p>${data.companyName || '-'}</p></div>
+          <div class="info-row"><span>Email</span><p>${data.email || '-'}</p></div>
+          <div class="info-row"><span>Mobile</span><p>${data.mobileNumber || '-'}</p></div>
+          <div class="info-row"><span>GST</span><p>${data.gstNumber || '-'}</p></div>
+          <div class="info-row"><span>Address</span><p>${data.address || '-'}</p></div>
+          <div class="info-row"><span>Country</span><p>${data.country || '-'}</p></div>
+        </div>
+      `;
+        });
     }
-  });
-</script>
+
+    // IMAGE PREVIEW
+    function openImagePreview(src) {
+      document.getElementById("previewImage").src = src;
+      document.getElementById("imagePreviewModal").style.display = "flex";
+    }
+
+    function closeImagePreview() {
+      document.getElementById("imagePreviewModal").style.display = "none";
+    }
+
+    // CLOSE DRAWER
+    function closeViewDrawer() {
+      document.getElementById("viewDrawer").classList.remove("active");
+    }
+
+    // DELETE
+    function closeDelete() {
+      $('#deleteModal').hide();
+    }
+
+    function confirmDelete() {
+      if (deleteId) {
+        window.location.href = "/clients/delete/" + deleteId;
+      }
+    }
+
+  </script>
 
 </body>
+
 </html>
