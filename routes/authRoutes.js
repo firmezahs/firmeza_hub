@@ -6,6 +6,9 @@ const router = express.Router();
 
 // Show login page
 router.get("/login", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/dashboard");
+  }
   res.render("login");
 });
 
@@ -16,18 +19,16 @@ router.post("/login", async (req, res) => {
   try {
     console.log("Login attempt:", email);
 
-    // 🔍 Find user in DB
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.send("User not found ❌");
+      return res.render("login", { error: "User not found" });
     }
 
-    // 🔐 Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.send("Invalid password ❌");
+      return res.render("login", { error: "Invalid password" });
     }
 
     // ✅ Save user in session
@@ -41,11 +42,11 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.send("Server error ❌");
+    res.render("login", { error: "Server error" });
   }
 });
 
-// Logout route
+// Logout
 router.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/auth/login");

@@ -9,8 +9,8 @@ import multer from "multer";
 import authRoutes from "./routes/authRoutes.js";
 import agreementRoutes from "./routes/agreementRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
-import serviceRoutes from "./routes/serviceRoutes.js"
-import developerRoutes from "./routes/developerRoutes.js"
+import serviceRoutes from "./routes/serviceRoutes.js";
+import developerRoutes from "./routes/developerRoutes.js";
 
 // Load env
 dotenv.config({ path: "./config.env" });
@@ -22,6 +22,7 @@ const upload = multer({ dest: "uploads/" });
 // MIDDLEWARE
 // =======================
 
+// Active sidebar highlight
 app.use((req, res, next) => {
   const path = req.path;
 
@@ -35,6 +36,8 @@ app.use((req, res, next) => {
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session
 app.use(
   session({
     secret: "firmeza-secret",
@@ -44,12 +47,24 @@ app.use(
   })
 );
 
+// ✅ GLOBAL USER (FIXED POSITION)
+app.use((req, res, next) => {
+  // Skip auth pages
+  if (req.path.startsWith("/auth")) {
+    return next();
+  }
 
-// Static files (CSS, JS, images)
+  // Make user available in all EJS views
+  res.locals.user = req.session?.user || null;
+
+  next();
+});
+
+// Static files
 app.use(express.static("public"));
 app.use("/uploads", express.static("uploads"));
 
-// View engine (EJS)
+// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
 
@@ -70,12 +85,11 @@ mongoose
 
 // API routes
 app.use("/auth", authRoutes);
-app.use("/agreements", agreementRoutes);
 app.use("/clients", clientRoutes);
-app.use('/services', serviceRoutes);
-app.use('/developers', developerRoutes)
+app.use("/services", serviceRoutes);
+app.use("/developers", developerRoutes);
 
-// Frontend routes
+// Redirect root → login
 app.get("/", (req, res) => {
   res.redirect("/auth/login");
 });
@@ -84,20 +98,15 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   res.send("Server is running ✅");
 });
-app.get("/dashboard", (req, res) => {
-  res.render("dashboard", {
-    user: { name: "Demo User" } // temporary
-  });
-});
 
-app.use((req, res, next) => {
-  // Don't attach user for login page
-  if (req.path.startsWith('/auth')) {
-    return next();
+// ✅ Dashboard (FIXED)
+app.get("/dashboard", (req, res) => {
+  // Optional protection
+  if (!req.session.user) {
+    return res.redirect("/auth/login");
   }
 
-  res.locals.user = req.user || req.session?.user || null;
-  next();
+  res.render("dashboard"); // user comes from res.locals
 });
 
 // =======================
@@ -108,5 +117,5 @@ app.use((req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

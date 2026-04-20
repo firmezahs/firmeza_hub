@@ -17,132 +17,125 @@
 
     <%- include('../partials/sidebar', { activePage: activePage }) %>
 
-      <div class="main-new">
-        <%- include('../partials/header') %>
+    <div class="main-new">
+      <%- include('../partials/header') %>
 
-          <div class="content-area">
+      <div class="content-area">
 
-            <p class="breadcrumb">
-              <a href="/dashboard">Dashboard</a> /
-              <a href="/clients" class="active">Clients</a>
-            </p>
+        <p class="breadcrumb">
+          <a href="/dashboard">Dashboard</a> /
+          <a href="/clients" class="active">Clients</a>
+        </p>
 
-            <div class="page-header-new">
-              <h1>Clients <span class="badge">
-                  <%= clients?.length || 0 %>
-                </span></h1>
-            </div>
+        <div class="page-header-new">
+          <h1>Clients <span class="badge">
+              <%= clients?.length || 0 %>
+            </span></h1>
+        </div>
 
-            <!-- SEARCH -->
-            <div class="filter-bar">
-              <div class="search-box">
-                <i class="ri-search-line"></i>
-                <input type="text" id="customSearch" placeholder="Search..." />
-              </div>
-
-              <div class="right-controls">
-                <button class="add-btn" onclick="window.location.href='/clients/add'">
-                  <i class="ri-add-line"></i> Add Client
-                </button>
-
-                <select id="entriesDropdown" class="entries-dropdown">
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- TABLE -->
-            <div class="table-wrapper">
-              <table id="clientsTable" class="custom-table">
-
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
-                    <th>Client</th>
-                    <th>Email</th>
-                    <th>Company</th>
-                    <th></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% clients.forEach(client=> { %>
-                    <tr>
-
-                      <td><input type="checkbox" class="rowCheckbox"></td>
-
-                      <td>
-                        <div class="client-main">
-
-                          <div class="client-avatar">
-                            <% if (client.logo) { %>
-                              <img src="/uploads/<%= client.logo %>" class="client-logo">
-                              <% } else { %>
-                                <div class="client-logo placeholder">
-                                  <%= client.name.charAt(0).toUpperCase() %>
-                                </div>
-                                <% } %>
-                          </div>
-
-                          <div class="client-info">
-                            <p class="client-code">#<%= client.clientId %>
-                            </p>
-                            <p class="client-name action-click" data-id="<%= client._id %>" data-action="view">
-                              <%= client.name %>
-                            </p>
-                            <p class="client-country">
-                              <%= client.country %>
-                            </p>
-                          </div>
-
-                        </div>
-                      </td>
-
-                      <td>
-                        <%= client.email %>
-                      </td>
-                      <td>
-                        <%= client.companyName %>
-                      </td>
-
-                      <!-- ✅ FIXED -->
-                      <td class="actions">
-                        <div class="action-menu">
-                          <i class="ri-more-2-fill menu-toggle"></i>
-
-                          <div class="dropdown">
-                            <div class="dropdown-item action-click" data-action="view" data-id="<%= client._id %>">
-                              <i class="ri-eye-line"></i> View
-                            </div>
-
-                            <div class="dropdown-item action-click" data-action="edit" data-id="<%= client._id %>">
-                              <i class="ri-edit-line"></i> Edit
-                            </div>
-
-                            <div class="dropdown-item action-click delete-text" data-action="delete"
-                              data-id="<%= client._id %>">
-                              <i class="ri-delete-bin-6-line"></i> Delete
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-
-                    </tr>
-                    <% }) %>
-                </tbody>
-
-              </table>
-            </div>
-
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="ri-search-line"></i>
+            <input type="text" id="customSearch" placeholder="Search..." />
           </div>
+
+          <div class="right-controls">
+            <button class="add-btn" onclick="window.location.href='/clients/add'">
+              <i class="ri-add-line"></i> Add Client
+            </button>
+
+            <select id="entriesDropdown" class="entries-dropdown">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="clientsTable" class="custom-table">
+
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>Client</th>
+                <th>Email</th>
+                <th>Company</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% clients.forEach(client=> { %>
+              <tr>
+
+                <td><input type="checkbox" class="rowCheckbox"></td>
+
+                <td>
+                  <div class="client-main">
+
+                    <div class="client-avatar">
+                      <% if (client.logo) { %>
+                      <img src="/uploads/<%= client.logo %>" class="client-logo">
+                      <% } else { %>
+                      <div class="client-logo placeholder">
+                        <%= client.name.charAt(0).toUpperCase() %>
+                      </div>
+                      <% } %>
+                    </div>
+
+                    <div class="client-info">
+                      <p class="client-code">#<%= client.clientId %></p>
+
+                      <p class="client-name action-click" data-id="<%= client._id %>" data-action="view">
+                        <%= client.name %>
+                      </p>
+
+                      <p class="client-country">
+                        <%= client.country %>
+                      </p>
+                    </div>
+
+                  </div>
+                </td>
+
+                <td><%= client.email %></td>
+                <td><%= client.companyName %></td>
+
+                <td class="actions">
+                  <div class="action-menu">
+                    <i class="ri-more-2-fill menu-toggle"></i>
+
+                    <div class="dropdown">
+                      <div class="dropdown-item action-click" data-action="view" data-id="<%= client._id %>">
+                        <i class="ri-eye-line"></i> View
+                      </div>
+
+                      <div class="dropdown-item action-click" data-action="edit" data-id="<%= client._id %>">
+                        <i class="ri-edit-line"></i> Edit
+                      </div>
+
+                      <div class="dropdown-item action-click delete-text" data-action="delete"
+                        data-id="<%= client._id %>">
+                        <i class="ri-delete-bin-6-line"></i> Delete
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <% }) %>
+            </tbody>
+
+          </table>
+        </div>
+
       </div>
+    </div>
 
   </div>
 
   <!-- DELETE MODAL -->
-
   <div id="deleteModal" class="modal">
     <div class="modal-content modern">
       <h3>Confirm Delete</h3>
@@ -153,64 +146,38 @@
         <button onclick="confirmDelete()" class="delete-btn">Delete</button>
       </div>
     </div>
-
   </div>
 
   <!-- VIEW DRAWER -->
-
   <div id="viewDrawer" class="drawer">
     <div class="drawer-content">
 
       <div style="padding:10px;">
         <button onclick="closeViewDrawer()" style="
-width:40px;
-height:40px;
-border-radius:50%;
-border:1.5px solid #5b5cff;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-
-"> <i class="ri-arrow-left-line" style="color:#5b5cff;"></i> </button>
+          width:40px;
+          height:40px;
+          border-radius:50%;
+          border:1.5px solid #5b5cff;
+          background:white;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          cursor:pointer;">
+          <i class="ri-arrow-left-line" style="color:#5b5cff;"></i>
+        </button>
       </div>
 
       <div id="viewDrawerBody">Loading...</div>
-    </div>
 
+    </div>
   </div>
 
-  <!-- IMAGE PREVIEW MODAL -->
-
-  <div id="imagePreviewModal" style="
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-">
-    <span onclick="closeImagePreview()" style="
-    position:absolute;
-    top:20px;
-    right:30px;
-    font-size:30px;
-    color:white;
-    cursor:pointer;
-  ">&times;</span>
-
-    <img id="previewImage" style="
-max-width:90%;
-max-height:90%;
-border-radius:10px;
-
-">
-
+  <!-- IMAGE PREVIEW -->
+  <div id="imagePreviewModal"
+    style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:9999;">
+    <span onclick="closeImagePreview()"
+      style="position:absolute;top:20px;right:30px;font-size:30px;color:white;cursor:pointer;">&times;</span>
+    <img id="previewImage" style="max-width:90%;max-height:90%;border-radius:10px;">
   </div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -219,7 +186,6 @@ border-radius:10px;
 
     let deleteId = null;
 
-    // SEARCH
     $('#customSearch').on('keyup', function () {
       let val = $(this).val().toLowerCase();
       $('#clientsTable tbody tr').filter(function () {
@@ -227,7 +193,6 @@ border-radius:10px;
       });
     });
 
-    // ✅ FIXED DROPDOWN JS
     $(document).on('click', '.menu-toggle', function (e) {
       e.stopPropagation();
       $('.dropdown').hide();
@@ -238,12 +203,13 @@ border-radius:10px;
       $('.dropdown').hide();
     });
 
-    // ACTION HANDLER
+    // ✅ FIXED HANDLER (NO UI CHANGE)
     $(document).on('click', '.action-click', function (e) {
       e.stopPropagation();
 
-      const id = $(this).data('id');
-      const action = $(this).data('action');
+      const target = $(e.target).closest('.action-click');
+      const id = target.data('id');
+      const action = target.data('action');
 
       if (!id || !action) return;
 
@@ -272,50 +238,46 @@ border-radius:10px;
         .then(res => res.json())
         .then(data => {
           body.innerHTML = `
-        <div class="view-top-bar">
-          <div class="view-actions">
-            
-            <button class="action-click edit-btn" data-action="edit" data-id="${data._id}">
-              <i class="ri-edit-line"></i> Edit
-            </button>
+            <div class="view-top-bar">
+              <div class="view-actions">
 
-           <button class="action-click delete-btn-drawer" data-action="delete" data-id="${data._id}">
-              <i class="ri-delete-bin-6-line"></i> Delete
-            </button>
+                <button onclick="window.location.href='/clients/view-page/${data._id}'"
+                  style="background: transparent;border:1.5px solid #14b8a6;color:#14b8a6;">
+                  <i class="ri-eye-line"></i> View Details
+                </button>
 
-          </div>
-        </div>
+                <button class="action-click edit-btn" data-action="edit" data-id="${data._id}">
+                  <i class="ri-edit-line"></i> Edit
+                </button>
 
-        <div class="view-avatar-wrapper">
-          <div class="view-avatar-large">
-            ${data.logo
-              ? `<img src="/uploads/${data.logo}" style="cursor:pointer;" onclick="openImagePreview('/uploads/${data.logo}')"/>`
-              : `<div class="avatar-placeholder">${(data.name || 'A').charAt(0).toUpperCase()}</div>`
-            }
-          </div>
-        </div>
+                <button class="action-click delete-btn-drawer" data-action="delete" data-id="${data._id}">
+                  <i class="ri-delete-bin-6-line"></i> Delete
+                </button>
 
-        <div class="view-info">
-          <div class="info-row"><span>Client ID</span><p>#${data.clientId || '-'}</p></div>
-          <div class="info-row"><span>Name</span><p>${data.name || '-'}</p></div>
-          <div class="info-row"><span>Company</span><p>${data.companyName || '-'}</p></div>
-          <div class="info-row"><span>Email</span><p>${data.email || '-'}</p></div>
-          <div class="info-row"><span>Mobile</span><p>${data.mobileNumber || '-'}</p></div>
-          <div class="info-row"><span>GST</span><p>${data.gstNumber || '-'}</p></div>
-          <div class="info-row"><span>Address</span><p>${data.address || '-'}</p></div>
-          <div class="info-row"><span>Country</span><p>${data.country || '-'}</p></div>
-        </div>
-      `;
+              </div>
+            </div>
+
+            <div class="view-avatar-wrapper">
+              <div class="view-avatar-large">
+                ${data.logo
+                  ? `<img src="/uploads/${data.logo}" onclick="openImagePreview('/uploads/${data.logo}')"/>`
+                  : `<div class="avatar-placeholder">${(data.name || 'A').charAt(0).toUpperCase()}</div>`
+                }
+              </div>
+            </div>
+
+            <div class="view-info">
+              <div class="info-row"><span>Client ID</span><p>#${data.clientId || '-'}</p></div>
+              <div class="info-row"><span>Name</span><p>${data.name || '-'}</p></div>
+              <div class="info-row"><span>Company</span><p>${data.companyName || '-'}</p></div>
+              <div class="info-row"><span>Email</span><p>${data.email || '-'}</p></div>
+              <div class="info-row"><span>Mobile</span><p>${data.mobileNumber || '-'}</p></div>
+              <div class="info-row"><span>GST</span><p>${data.gstNumber || '-'}</p></div>
+              <div class="info-row"><span>Address</span><p>${data.address || '-'}</p></div>
+              <div class="info-row"><span>Country</span><p>${data.country || '-'}</p></div>
+            </div>
+          `;
         });
-    }
-
-    function openImagePreview(src) {
-      document.getElementById("previewImage").src = src;
-      document.getElementById("imagePreviewModal").style.display = "flex";
-    }
-
-    function closeImagePreview() {
-      document.getElementById("imagePreviewModal").style.display = "none";
     }
 
     function closeViewDrawer() {
@@ -331,6 +293,27 @@ border-radius:10px;
         window.location.href = "/clients/delete/" + deleteId;
       }
     }
+
+    function openImagePreview(src) {
+      document.getElementById("previewImage").src = src;
+      document.getElementById("imagePreviewModal").style.display = "flex";
+    }
+
+    function closeImagePreview() {
+      document.getElementById("imagePreviewModal").style.display = "none";
+    }
+
+    document.getElementById("viewDrawer").addEventListener("click", function (e) {
+      const content = document.querySelector(".drawer-content");
+      if (!content.contains(e.target)) {
+        closeViewDrawer();
+      }
+    });
+
+    document.querySelector(".drawer-content").addEventListener("click", function (e) {
+      if (e.target.closest('.action-click')) return;
+      e.stopPropagation();
+    });
 
   </script>
 

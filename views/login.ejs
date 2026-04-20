@@ -4,51 +4,55 @@
   <title>Login | Firmeza Hub</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="login-page">
+<body>
 
-  <div class="login-container">
+  <div class="login-page">
 
-    <!-- LEFT SIDE -->
-    <div class="login-left">
-      <h1>Welcome</h1>
-      <p>
-        Manage your agreements, clients and documents in one place.
-        Secure, fast and easy to use platform.
-      </p>
-    </div>
+    <div class="login-container">
 
-    <!-- RIGHT SIDE -->
-    <div class="login-right">
+      <!-- LEFT SIDE -->
+      <div class="login-left">
+        <h1>Welcome</h1>
+        <p>
+          Manage your agreements, clients and documents in one place.
+          Secure, fast and easy to use platform.
+        </p>
+      </div>
 
-      <div class="brand">Firmeza Hub</div>
+      <!-- RIGHT SIDE -->
+      <div class="login-right">
 
-      <form action="/auth/login" method="POST">
+        <div class="brand">Firmeza Hub</div>
 
-        <div class="form-group">
-          <label>Email</label>
-          <input 
-            type="email" 
-            name="email" 
-            placeholder="Enter your email"
-            value="admin@firmeza.com"
-            required 
-          />
-        </div>
+        <form action="/auth/login" method="POST">
 
-        <div class="form-group">
-          <label>Password</label>
-          <input 
-            type="password" 
-            name="password" 
-            placeholder="Enter your password"
-            value="123456"
-            required 
-          />
-        </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Enter your email"
+              value="admin@firmeza.com"
+              required 
+            />
+          </div>
 
-        <button type="submit">Login</button>
+          <div class="form-group">
+            <label>Password</label>
+            <input 
+              type="password" 
+              name="password" 
+              placeholder="Enter your password"
+              value="123456"
+              required 
+            />
+          </div>
 
-      </form>
+          <button type="submit">Login</button>
+
+        </form>
+
+      </div>
 
     </div>
 
