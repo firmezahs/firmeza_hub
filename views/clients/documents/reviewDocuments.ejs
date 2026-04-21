@@ -1,0 +1,155 @@
+<% const currentTab = "documents"; %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Document Review</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <%- include('../../partials/sidebar', { activePage: activePage }) %>
+
+    <div class="main-new">
+
+        <%- include('../../partials/header', { user: user }) %>
+
+        <div class="content-area">
+
+            <div class="client-details-layout" style="display:flex; gap:20px;">
+
+                <div class="client-middle" style="flex:1;">
+
+                    <!-- BREADCRUMB -->
+                    <div class="breadcrumb">
+                        <a href="/dashboard">Dashboard</a>
+                        <span> / </span>
+                        <a href="/clients">Clients</a>
+                        <span> / </span>
+                        <a href="/clients/view-page/<%= client._id %>?tab=documents">Documents</a>
+                        <span> / </span>
+                        <span class="active">Review Documents</span>
+                    </div>
+
+                    <h2 style="margin-bottom:15px;">📄 Document Review</h2>
+                    <% if (files && files.length > 0) { %>
+
+                    <!-- FORM START -->
+                    <form action="/clients/documents/confirm-upload/<%= client._id %>" method="POST">
+
+                        <table class="custom-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    <th>Name</th>
+                                    <th>File</th>
+                                    <th style="text-align:right;">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <% files.forEach((file, index) => { 
+                                    const ext = file.originalname.split('.').pop().toLowerCase();
+                                %>
+
+                                <tr>
+
+                                    <!-- SR NO -->
+                                    <td><%= index + 1 %></td>
+
+                                    <!-- EDITABLE NAME -->
+                                    <td>
+                                        <input type="text"
+                                               name="customNames"
+                                               value="<%= file.originalname %>"
+                                               style="width:100%; padding:6px;">
+                                    </td>
+
+                                    <!-- FILE COLUMN -->
+                                    <td style="display:flex; align-items:center; gap:8px;">
+
+                                        <% if (['png','jpg','jpeg'].includes(ext)) { %>
+                                            <i class="ri-image-line" style="color:#3b82f6;"></i>
+                                        <% } else if (ext === 'pdf') { %>
+                                            <i class="ri-file-pdf-line" style="color:#ef4444;"></i>
+                                        <% } else if (['doc','docx'].includes(ext)) { %>
+                                            <i class="ri-file-word-line" style="color:#2563eb;"></i>
+                                        <% } else if (['xls','xlsx'].includes(ext)) { %>
+                                            <i class="ri-file-excel-line" style="color:#16a34a;"></i>
+                                        <% } else { %>
+                                            <i class="ri-file-line"></i>
+                                        <% } %>
+
+                                        <%= file.originalname %>
+                                    </td>
+
+                                    <!-- ACTIONS -->
+                                    <td style="text-align:right;">
+
+                                        <!-- VIEW -->
+                                        <a href="/uploads/<%= file.filename %>" target="_blank">
+                                            <button type="button" class="add-btn" style="padding:6px 12px; margin-right:8px;">
+                                                <i class="ri-eye-line"></i> 
+                                            </button>
+                                        </a>
+
+                                        <!-- CANCEL -->
+                                        <a href="/clients/documents/remove-temp/<%= index %>">
+                                            <button type="button" class="add-btn" style="background:#fee2e2; color:#b91c1c; padding:6px 12px;">
+                                                <i class="ri-close-line"></i> 
+                                            </button>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- CONFIRM BUTTON -->
+<div style="
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-end;
+    width:100%;
+">
+    <button class="add-btn" style="padding:10px 18px;">
+        Confirm Upload
+    </button>
+</div>
+
+                    </form>
+                    <!-- FORM END -->
+
+                    <% } else { %>
+
+                        <table class="custom-table">
+                            <tr>
+                                <td colspan="4" style="text-align:center; padding:20px; color:gray;">
+                                    No files selected for review
+                                </td>
+                            </tr>
+                        </table>
+
+                    <% } %>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

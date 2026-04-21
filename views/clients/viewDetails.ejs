@@ -1,6 +1,4 @@
-<% const tab=(typeof query !=="undefined" && query.tab) ? query.tab : "credentials" ; %>
-
-<% if (!isPartial) { %>
+<% const currentTab=typeof tab !=="undefined" ? tab : "credentials" ; %>
 
 <!DOCTYPE html>
 <html>
@@ -12,257 +10,365 @@
 </head>
 
 <body>
+    <div class="admin-container">
 
-<div class="admin-container">
+        <%- include('../partials/sidebar', { activePage: activePage }) %>
 
-<%- include('../partials/sidebar', { activePage: activePage }) %>
+        <div class="main-new">
+            <%- include('../partials/header') %>
 
-<div class="main-new">
-<%- include('../partials/header') %>
+            <div class="content-area">
 
-<div class="content-area">
+                <div class="client-details-layout" style="display:flex; gap:20px;">
 
-<% } %>
+                    <div class="client-middle" style="flex:1;">
 
-<!-- MAIN -->
-<div class="client-details-layout" style="display:flex; gap:20px;">
+                        <!-- BREADCRUMB -->
+                        <div class="breadcrumb">
+                            <a href="/dashboard">Dashboard</a>
+                            <span> / </span>
+                            <a href="/clients">Clients</a>
+                            <span> / </span>
+                            <span class="active">Client Details</span>
+                        </div>
 
-    <!-- LEFT -->
-    <div class="client-middle" style="flex:1;">
+                        <h2 style="margin-bottom:15px;">Client Details</h2>
 
-        <!-- BREADCRUMB -->
-        <div class="breadcrumb">
-            <a href="/dashboard">Dashboard</a>
-            <span> / </span>
+                        <!-- TABS -->
+                        <div style="display:flex; gap:20px; border-bottom:1px solid #e5e7eb; margin-bottom:15px;">
 
-            <a href="/clients">Clients</a>
-            <span> / </span>
+                            <a class="tab <%= currentTab === 'credentials' ? 'active' : '' %>"
+                                href="/clients/view-page/<%= client._id %>?tab=credentials">
+                                Credentials <span><%= credentials ? credentials.length : 0 %></span>
+                            </a>
 
-            <span class="active">Client Details</span>
-        </div>
+                            <a class="tab <%= currentTab === 'documents' ? 'active' : '' %>"
+                                href="/clients/view-page/<%= client._id %>?tab=documents">
+                                Documents <span><%= documents ? documents.length : 0 %></span>
+                            </a>
 
-        <h2 style="margin-bottom:15px;">Client Details</h2>
+                            <a class="tab <%= currentTab === 'workupdate' ? 'active' : '' %>"
+                                href="/clients/view-page/<%= client._id %>?tab=workupdate">
+                                Work Update <span><%= workupdates ? workupdates.length : 0 %></span>
+                            </a>
 
-        <!-- TABS -->
-        <div style="display:flex; gap:20px; border-bottom:1px solid #e5e7eb; margin-bottom:15px;">
+                            <a class="tab <%= currentTab === 'projects' ? 'active' : '' %>"
+                                href="/clients/view-page/<%= client._id %>?tab=projects">
+                                Projects <span><%= projects ? projects.length : 0 %></span>
+                            </a>
 
-            <a class="tab <%= tab === 'credentials' ? 'active' : '' %>"
-                href="/clients/view-page/<%= client._id %>?tab=credentials">
-                Credentials
-                <span><%= credentials ? credentials.length : 0 %></span>
-            </a>
+                        </div>
 
-            <a class="tab <%= tab === 'documents' ? 'active' : '' %>"
-                href="/clients/view-page/<%= client._id %>?tab=documents">
-                Documents  <span>0</span>
-            </a>
+                        <!-- FILTER -->
+                        <div class="filter-bar">
 
-            <a class="tab <%= tab === 'workupdate' ? 'active' : '' %>"
-                href="/clients/view-page/<%= client._id %>?tab=workupdate">
-                Work Update <span>0</span>
-            </a>
+                            <div class="search-box">
+                                <i class="ri-search-line"></i>
+                                <input type="text" placeholder="Search..." />
+                            </div>
 
-            <a class="tab <%= tab === 'projects' ? 'active' : '' %>"
-                href="/clients/view-page/<%= client._id %>?tab=projects">
-                Projects <span>0</span>
-            </a>
+                            <div class="right-controls">
 
-        </div>
+                                <% if (currentTab==="credentials" ) { %>
+                                <button class="add-btn"
+                                    onclick="window.location.href='/clients/credentials/add/<%= client._id %>'">
+                                    <i class="ri-add-line"></i> Add Credential
+                                </button>
 
-        <!-- FILTER -->
-        <div class="filter-bar">
+                                <% } else if (currentTab==="workupdate" ) { %>
+                                <button class="add-btn"
+                                    onclick="window.location.href='/clients/workupdate/add/<%= client._id %>'">
+                                    <i class="ri-add-line"></i> Add Work Update
+                                </button>
 
-            <div class="search-box">
-                <i class="ri-search-line"></i>
-                <input type="text" id="credentialSearch" placeholder="Search..." />
-            </div>
+                                <% } else if (currentTab==="documents" ) { %>
 
-            <div class="right-controls">
+                                <form id="uploadForm"
+                                    action="/clients/documents/add/<%= client._id %>"
+                                    method="POST" enctype="multipart/form-data">
 
-                <% if (tab==="credentials") { %>
-                    <button class="add-btn"
-                        onclick="window.location.href='/clients/credentials/add/<%= client._id %>'">
-                        <i class="ri-add-line"></i> Add Credential
-                    </button>
-                <% } %>
+                                    <input type="file" id="fileInput" name="files" multiple
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                                        style="display:none;">
 
-                <select class="entries-dropdown">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
+                                    <button type="button" class="add-btn"
+                                        onclick="triggerFileUpload()">
+                                        <i class="ri-upload-2-line"></i> Upload
+                                    </button>
 
-            </div>
-        </div>
+                                </form>
 
-        <!-- TABLE -->
-        <div class="table-wrapper">
+                                <% } else if (currentTab==="projects" ) { %>
 
-            <table id="credentialsTable" class="custom-table">
+                                <button class="add-btn"
+                                    onclick="window.location.href='/clients/projects/add/<%= client._id %>'">
+                                    <i class="ri-add-line"></i> Add Project
+                                </button>
 
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAllCreds"></th>
-                        <th>Title</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>2FA</th>
-                        <th></th>
-                    </tr>
-                </thead>
+                                <% } %>
 
-                <tbody>
+                                <select class="entries-dropdown">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                </select>
 
-                <% if (tab==="credentials" && credentials && credentials.length > 0) { %>
+                            </div>
+                        </div>
 
-                    <% credentials.forEach(item => { %>
-                        <tr>
+                        <!-- TABLE / CONTENT -->
+                        <div class="table-wrapper">
 
-                            <td><input type="checkbox" class="rowCheckbox"></td>
+                            <!-- ================= CREDENTIALS ================= -->
+                            <% if (currentTab==="credentials" ) { %>
 
-                            <td>
-                                <span class="cell-text"><%= item.title || 'Credential' %></span>
-                            </td>
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox"></th>
+                                        <th>Title</th>
+                                        <th>Username</th>
+                                        <th>Password</th>
+                                        <th>2FA</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
 
-                            <td><%= item.username %></td>
+                                <tbody>
+                                    <% if (credentials && credentials.length> 0) { %>
+                                    <% credentials.forEach(item=> { %>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td><%= item.title || 'Credential' %></td>
+                                        <td><%= item.username %></td>
 
-                            <!-- ✅ PASSWORD + COPY -->
-                            <td>
-                                <span>••••••</span>
+                                        <td>
+                                            ••••••
+                                            <i class="ri-file-copy-line copy-password"
+                                                data-password="<%= item.password %>"
+                                                style="cursor:pointer; margin-left:8px;"></i>
+                                        </td>
 
-                                <i class="ri-file-copy-line copy-password"
-                                   data-password="<%= item.password %>"
-                                   style="cursor:pointer; margin-left:8px;"
-                                   title="Copy password"></i>
-                            </td>
+                                        <td>
+                                            <span class="status <%= item.has_2fa ? 'active' : 'inactive' %>">
+                                                <%= item.has_2fa ? 'Enabled' : 'Disabled' %>
+                                            </span>
+                                        </td>
 
-                            <td>
-                                <span class="status <%= item.has_2fa ? 'active' : 'inactive' %>">
-                                    <%= item.has_2fa ? 'Enabled' : 'Disabled' %>
-                                </span>
-                            </td>
+                                        <td>
+                                            <div class="action-menu">
+                                                <i class="ri-more-2-fill menu-toggle"></i>
+                                                <div class="dropdown">
+                                                    <a href="/clients/credentials/edit/<%= item._id %>">
+                                                        <i class="ri-edit-line"></i> Edit
+                                                    </a>
+                                                    <a href="#"
+                                                        onclick="openDeleteModal('/clients/credentials/delete/<%= item._id %>'); return false;">
+                                                        <i class="ri-delete-bin-6-line"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                    <% } else { %>
+                                    <tr><td colspan="6" style="text-align:center;">No credentials found</td></tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
 
-                            <td>
-                                <div class="action-menu">
+                            <!-- ================= DOCUMENTS ================= -->
+                            <% } else if (currentTab==="documents" ) { %>
 
-                                    <i class="ri-more-2-fill menu-toggle"></i>
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr No</th>
+                                        <th>Document</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
 
-                                    <div class="dropdown">
+                                <tbody>
+                                    <% if (documents && documents.length> 0) { %>
+                                    <% documents.forEach((doc, index)=> { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= doc.fileName %></td>
 
-                                        <a class="dropdown-item"
-                                           href="/clients/credentials/edit/<%= item._id %>">
-                                            <i class="ri-edit-line"></i> Edit
-                                        </a>
+                                        <td style="text-align:right;">
+                                            <div class="action-menu">
+                                                <i class="ri-more-2-fill menu-toggle"></i>
+                                                <div class="dropdown">
+                                                    <a href="/uploads/<%= doc.filePath %>" target="_blank">
+                                                        <i class="ri-eye-line"></i> View
+                                                    </a>
+                                                    <a href="#"
+                                                        onclick="openDeleteModal('/clients/documents/delete/<%= doc._id %>'); return false;">
+                                                        <i class="ri-delete-bin-6-line"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                    <% } else { %>
+                                    <tr><td colspan="3" style="text-align:center;">No documents found</td></tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
 
-                                        <a class="dropdown-item delete-text"
-                                           href="#"
-                                           onclick="openDeleteModal('<%= item._id %>'); return false;">
-                                            <i class="ri-delete-bin-6-line"></i> Delete
-                                        </a>
+                            <!-- ================= WORK UPDATE ================= -->
+                            <% } else if (currentTab==="workupdate" ) { %>
 
+                            <div class="work-grid">
+                                <% if (groupedUpdates && Object.keys(groupedUpdates).length> 0) { %>
+                                <% Object.keys(groupedUpdates).forEach(date=> { %>
+
+                                <div class="work-card">
+                                    <div class="card-date"><%= date %></div>
+                                    <div class="card-tag">Work Updates</div>
+
+                                    <div class="card-body">
+                                        <% groupedUpdates[date].forEach(item=> { %>
+
+                                        <div class="work-item">
+                                            <h4><%= item.title %></h4>
+                                            <p><%= item.description %></p>
+
+                                            <div class="card-actions">
+                                                <i class="ri-pencil-line edit-icon"
+                                                    onclick="window.location.href='/clients/workupdate/edit/<%= item._id %>'"></i>
+
+                                                <i class="ri-delete-bin-line delete-icon"
+                                                    onclick="openDeleteModal('/clients/workupdate/delete/<%= item._id %>')"></i>
+                                            </div>
+                                        </div>
+
+                                        <% }) %>
                                     </div>
-
                                 </div>
-                            </td>
 
-                        </tr>
-                    <% }) %>
+                                <% }) %>
+                                <% } else { %>
+                                <p style="text-align:center;">No work updates found</p>
+                                <% } %>
+                            </div>
 
-                <% } else { %>
+                            <!-- ================= PROJECTS ================= -->
+                            <% } else if (currentTab==="projects" ) { %>
 
-                    <tr>
-                        <td colspan="6" style="text-align:center; color:#9ca3af;">
-                            No credentials found
-                        </td>
-                    </tr>
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr No</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Developer</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
 
-                <% } %>
+                                <tbody>
+                                    <% if (projects && projects.length> 0) { %>
+                                    <% projects.forEach((p, index)=> { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= p.title %></td>
+                                        <td><%= p.description %></td>
 
-                </tbody>
+                                        <!-- ✅ FIXED LINE -->
+                                        <td><%= p.developer || 'Not Assigned' %></td>
 
-            </table>
+                                        <td style="text-align:right;">
+                                            <div class="action-menu">
+                                                <i class="ri-more-2-fill menu-toggle"></i>
+                                                <div class="dropdown">
+                                                    <a href="/clients/projects/edit/<%= p._id %>">
+                                                        <i class="ri-edit-line"></i> Edit
+                                                    </a>
+                                                    <a href="#"
+                                                        onclick="openDeleteModal('/clients/projects/delete/<%= p._id %>'); return false;">
+                                                        <i class="ri-delete-bin-6-line"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                    <% } else { %>
+                                    <tr><td colspan="5" style="text-align:center;">No projects found</td></tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
 
+                            <% } %>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
 
     </div>
 
-</div>
+    <!-- DELETE MODAL -->
+    <div id="deleteModal" class="modal" style="display:none;">
+        <div class="modal-content modern">
+            <h3>Confirm Delete</h3>
+            <p>Do you really want to delete?</p>
 
-<!-- DELETE MODAL -->
-<div id="deleteModal" class="modal">
-  <div class="modal-content modern">
-    <div class="modal-header">
-      <h3>Confirm Delete</h3>
-      <span class="close-btn" onclick="closeDeleteModal()">&times;</span>
+            <div class="modal-actions">
+                <button onclick="closeDelete()">Cancel</button>
+                <button onclick="confirmDelete()" class="delete-btn">Delete</button>
+            </div>
+        </div>
     </div>
-    <p>Do you really want to delete?</p>
-    <div class="modal-actions">
-      <button onclick="closeDeleteModal()">Cancel</button>
-      <a id="confirmDeleteBtn" class="delete-btn">Delete</a>
-    </div>
-  </div>
-</div>
 
-<% if (!isPartial) { %>
-
-</div>
-</div>
-</div>
-
-<!-- ✅ COPY SCRIPT -->
-<script>
-document.addEventListener("click", function (e) {
-
-    if (e.target.classList.contains("copy-password")) {
-
-        const password = e.target.getAttribute("data-password");
-
-        navigator.clipboard.writeText(password)
-            .then(() => {
-                e.target.classList.remove("ri-file-copy-line");
-                e.target.classList.add("ri-check-line");
-
-                setTimeout(() => {
-                    e.target.classList.remove("ri-check-line");
-                    e.target.classList.add("ri-file-copy-line");
-                }, 1500);
-            })
-            .catch(err => console.error("Copy failed", err));
+    <script>
+    function triggerFileUpload() {
+        document.getElementById("fileInput")?.click();
     }
 
-});
-</script>
+    let deleteUrl = null;
 
-<script>
-document.addEventListener("click", function (e) {
-    const allDropdowns = document.querySelectorAll(".dropdown");
+    function openDeleteModal(url) {
+        deleteUrl = url;
+        document.getElementById("deleteModal").style.display = "flex";
+    }
 
-    allDropdowns.forEach(d => {
-        if (!d.parentElement.contains(e.target)) {
-            d.style.display = "none";
+    function closeDelete() {
+        document.getElementById("deleteModal").style.display = "none";
+        deleteUrl = null;
+    }
+
+    function confirmDelete() {
+        if (deleteUrl) {
+            window.location.href = deleteUrl;
+        }
+    }
+
+    document.addEventListener("click", function (e) {
+        const toggle = e.target.closest(".menu-toggle");
+
+        if (toggle) {
+            const dropdown = toggle.nextElementSibling;
+
+            document.querySelectorAll(".dropdown").forEach(d => {
+                if (d !== dropdown) d.style.display = "none";
+            });
+
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        } else {
+            document.querySelectorAll(".dropdown").forEach(d => {
+                d.style.display = "none";
+            });
         }
     });
-
-    if (e.target.classList.contains("menu-toggle")) {
-        const dropdown = e.target.nextElementSibling;
-        dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
-    }
-});
-</script>
-
-<script>
-function openDeleteModal(id) {
-    document.getElementById("deleteModal").style.display = "flex";
-    document.getElementById("confirmDeleteBtn").href =
-        "/clients/credentials/delete/" + id;
-}
-function closeDeleteModal() {
-    document.getElementById("deleteModal").style.display = "none";
-}
-</script>
+    </script>
 
 </body>
 </html>
-
-<% } %>

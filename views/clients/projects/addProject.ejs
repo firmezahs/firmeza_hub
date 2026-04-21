@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= project ? 'Edit Project' : 'Add Project' %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <%- include('../../partials/sidebar', { activePage: 'clients' }) %>
+
+    <div class="main-new">
+        <%- include('../../partials/header') %>
+
+        <div class="content-area">
+
+            <!-- BREADCRUMB -->
+            <div class="breadcrumb">
+                <a href="/dashboard">Dashboard</a>
+                <span> / </span>
+                <a href="/clients">Clients</a>
+                <span> / </span>
+                <a href="/clients/view-page/<%= client._id %>?tab=projects">Projects</a>
+                <span> / </span>
+                <span class="active"><%= project ? 'Edit Project' : 'Add Project' %></span>
+            </div>
+
+            <h2 style="margin-bottom:15px;">
+                <%= project ? 'Edit Project' : 'Add Project' %>
+            </h2>
+
+            <div class="form-card">
+
+                <form action="<%= project ? '/clients/projects/edit/' + project._id : '/clients/projects/add/' + client._id %>" method="POST">
+
+                    <!-- GRID -->
+                    <div class="form-grid" style="grid-template-columns: 1fr;">
+
+                        <!-- TITLE -->
+                        <div class="form-group">
+                            <label>Title <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                name="title" 
+                                placeholder="Enter Project Title" 
+                                required
+                                value="<%= project ? project.title : '' %>"
+                                style="
+                                    font-family: inherit;
+                                    font-size: 14px;
+                                    width: 100%;
+                                "
+                            >
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea 
+                                name="description" 
+                                placeholder="Enter Description"
+                                rows="5"
+                                style="
+                                    height:120px;
+                                    resize:none;
+                                    font-family: inherit;
+                                    font-size: 14px;
+                                    line-height: 1.4;
+                                    padding: 10px;
+                                    width: 100%;
+                                "
+                            ><%= project ? project.description : '' %></textarea>
+                        </div>
+
+                        <!-- DEVELOPER -->
+                        <div class="form-group">
+                            <label>Developer</label>
+                            <input 
+                                type="text" 
+                                name="developer" 
+                                placeholder="Enter Developer"
+                                value="<%= project && project.developer !== 'Not Assigned' ? project.developer : '' %>"
+                                style="
+                                    font-family: inherit;
+                                    font-size: 14px;
+                                    width: 100%;
+                                "
+                            >
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIONS -->
+                    <div class="form-actions">
+
+                        <button 
+                            type="button" 
+                            class="cancel-btn"
+                            onclick="window.location.href='/clients/view-page/<%= client._id %>?tab=projects'"
+                        >
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="save-btn">
+                            <%= project ? 'Update Project' : 'Save Project' %>
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
