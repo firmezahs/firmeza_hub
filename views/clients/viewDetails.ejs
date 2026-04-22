@@ -83,9 +83,7 @@
 
                                 <% } else if (currentTab==="documents" ) { %>
 
-                                <form id="uploadForm"
-                                    action="/clients/documents/add/<%= client._id %>"
-                                    method="POST" enctype="multipart/form-data">
+                                <form id="uploadForm" onsubmit="return false;">
 
                                     <input type="file" id="fileInput" name="files" multiple
                                         accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
@@ -328,9 +326,33 @@
     </div>
 
     <script>
-    function triggerFileUpload() {
-        document.getElementById("fileInput")?.click();
-    }
+   function triggerFileUpload() {
+    const input = document.getElementById("fileInput");
+    input.click();
+
+    input.onchange = async function () {
+        const files = input.files;
+        if (!files.length) return;
+
+        const formData = new FormData();
+        for (let file of files) {
+            formData.append("files", file);
+        }
+
+        const clientId = "<%= client._id %>";
+
+        const res = await fetch(`/clients/documents/review/${clientId}`, {
+            method: "POST",
+            body: formData
+        });
+
+        if (res.ok) {
+            window.location.href = `/clients/documents/review/${clientId}`;
+        } else {
+            alert("Upload failed");
+        }
+    };
+}
 
     let deleteUrl = null;
 
