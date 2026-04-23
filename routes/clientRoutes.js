@@ -314,7 +314,9 @@ router.post("/credentials/add/:id", async (req, res) => {
 
     await newCredential.save();
 
-    res.redirect(`/clients/view-page/${req.params.id}`);
+    res.redirect(
+  `/clients/view-page/${req.params.id}?tab=credentials&success=created`
+);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error saving credential");
@@ -332,9 +334,10 @@ router.get("/credentials/delete/:id", async (req, res) => {
     await Credential.findByIdAndDelete(req.params.id);
 
     res.redirect(
-      "/clients/view-page/" + credential.clientId +
-      "?error=" + encodeURIComponent("Credential deleted successfully")
-    );
+  "/clients/view-page/" +
+  credential.clientId +
+  "?tab=credentials&success=deleted"
+);
 
   } catch (error) {
     console.error(error);
@@ -384,9 +387,10 @@ router.post("/credentials/edit/:id", async (req, res) => {
     });
 
     res.redirect(
-      "/clients/view-page/" + credential.clientId +
-      "?success=" + encodeURIComponent("Credential updated successfully")
-    );
+  "/clients/view-page/" +
+  credential.clientId +
+  "?tab=credentials&success=updated"
+);
   } catch (err) {
     res.redirect("/clients?error=" + encodeURIComponent("Update failed"));
   }
