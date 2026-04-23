@@ -210,6 +210,7 @@ router.get("/view-page/:id", async (req, res) => {
     if (!client) return res.status(404).send("Client not found");
 
     const tab = req.query.tab || "credentials";
+    const projectId = req.query.projectId; 
 
     const credentials = await Credential.find({ clientId: req.params.id })
       .sort({ createdAt: -1 });
@@ -220,9 +221,17 @@ router.get("/view-page/:id", async (req, res) => {
     const documents = await Document.find({ clientId: req.params.id })
       .sort({ createdAt: -1 });
 
-    // ✅ FIX HERE
     const projects = await Projects.find({ clientId: req.params.id })
       .sort({ createdAt: -1 });
+
+    let selectedProject = null;
+
+if (projectId) {
+  selectedProject = await Projects.findOne({
+    _id: projectId,
+    clientId: req.params.id
+  });
+}
 
     // GROUP WORK UPDATES
     const groupedUpdates = {};
@@ -238,7 +247,8 @@ router.get("/view-page/:id", async (req, res) => {
       client,
       credentials: credentials || [],
       workupdates: workupdates || [],
-      projects: projects || [], // ✅ IMPORTANT
+      projects: projects || [],
+      selectedProject, 
       groupedUpdates,
       documents,
       activePage: "clients",
@@ -283,8 +293,8 @@ router.get("/credentials/add/:id", async (req, res) => {
 
   res.render("clients/credentials/addCredentials", {
     client,
-    isEdit: false,       // ✅ FIX ADDED
-    credential: null,    // ✅ SAFE DEFAULT
+    isEdit: false,      
+    credential: null,  
     activePage: "clients"
   });
 });
@@ -462,7 +472,7 @@ router.get("/workupdate/edit/:id", async (req, res) => {
     res.render("clients/workupdate/addWorkUpdate", {
       client,
       work,
-      isEdit: true   // 🔥 THIS triggers edit mode
+      isEdit: true   
     });
 
   } catch (err) {
@@ -588,7 +598,6 @@ router.get("/documents/remove-temp/:index", (req, res) => {
   res.redirect("back");
 });
 
-// ✅ STORE FILES TEMPORARILY FOR REVIEW
 router.post("/documents/review/:id", upload.array("files", 5), (req, res) => {
   try {
     req.session.pendingFiles = req.files; // store multer files
@@ -606,7 +615,7 @@ router.get("/projects/add/:id", async (req, res) => {
 
   res.render("clients/projects/addProject", {
     client,
-    project: null,   // ✅ ADD THIS FIX
+    project: null, 
     isEdit: false,
     activePage: "clients"
   });
@@ -673,7 +682,7 @@ router.get("/projects/edit/:id", async (req, res) => {
 
     res.render("clients/projects/addProject", {
       client,
-      project,      // 👈 IMPORTANT (edit mode data)
+      project,    
       isEdit: true,
       activePage: "clients"
     });

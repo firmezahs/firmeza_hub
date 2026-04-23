@@ -23,8 +23,9 @@ body {
 body {
   font-family: Inter, sans-serif;
   background: var(--bg-main);
-  height: 100vh;
-  overflow: hidden; /* 🔥 prevent full page scroll */
+  min-height: 100vh;
+  overflow: hidden;
+  /* 🔥 prevent full page scroll */
 }
 
 /* ================= TOP NAVBAR (FIXED) ================= */
@@ -109,20 +110,23 @@ body {
 
   display: flex;
   flex-direction: column;
-  padding: 0; /* remove outer padding */
+  padding: 0;
+  /* remove outer padding */
 }
 
 .content-area {
- flex: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 30px 50px;
-  background: var(--bg-main);
+  padding: 24px 40px;
+  /* tighter + consistent */
+  gap: 18px;
 }
 
 .custom-table thead {
-  background: #eef2f7; /* header slightly darker than rows */
+  background: #eef2f7;
+  /* header slightly darker than rows */
 }
 
 /* ================= LOGIN PAGE ================= */
@@ -276,7 +280,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
+  margin-top: 4px;  /* 🔥 slight separation from tabs */
+  margin-bottom: 8px;
 }
 
 /* LEFT SIDE - Search bar */
@@ -370,9 +376,10 @@ button {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  background: #f3f4f6; /* slightly darker than bg-main */
+  background: #f3f4f6;
+  /* slightly darker than bg-main */
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible !important;
 }
 
 .custom-table thead {
@@ -541,12 +548,14 @@ input[type="checkbox"] {
   right: 0;
   top: 32px;
 
-  background: #f3f4f6; /* 🔥 light grey like your image */
+  background: #f3f4f6;
+  /* 🔥 light grey like your image */
   border-radius: 14px;
   min-width: 180px;
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: none; /* ❌ remove border */
+  border: none;
+  /* ❌ remove border */
 
   overflow: hidden;
   z-index: 9999;
@@ -559,13 +568,10 @@ input[type="checkbox"] {
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 12px 16px;
   font-size: 14px;
-
   color: #111827;
   text-decoration: none;
-
   transition: background 0.2s ease;
 }
 
@@ -629,7 +635,7 @@ input[type="checkbox"] {
   justify-content: flex-end;
   align-items: center;
   padding: 0 50px;
-  flex-shrink: 0; 
+  flex-shrink: 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1101,7 +1107,7 @@ textarea,
 .drawer-content {
   transform: translateX(100%);
   transition: transform 0.3s ease;
-   position: absolute;
+  position: absolute;
   top: 0;
   right: 0;
   width: 420px;
@@ -1589,11 +1595,25 @@ table.dataTable tbody tr {
   flex: 1;
   margin-top: 0px;
   position: relative;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  margin: 0 !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+  margin: 0 !important;
 }
 
 .table-wrapper {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+  margin-top: 0;
+  padding-top: 0;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  overflow: hidden; 
 }
 
 .dataTables_wrapper .dataTables_scroll {
@@ -1675,12 +1695,15 @@ table.dataTable tbody tr {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  margin-top: 10px; 
   padding: 14px 18px;
   border-top: 1px solid var(--border);
   background: #fff;
 }
 
+.custom-table thead th {
+  padding: 14px 16px !important;
+}
 /* Remove weird spacing */
 .dataTables_info {
   margin: 0 !important;
@@ -1690,7 +1713,7 @@ table.dataTable tbody tr {
 .dataTables_paginate {
   margin: 0 !important;
   padding: 0 !important;
-} 
+}
 
 .custom-table th {
   padding: 12px 16px !important;
@@ -1873,14 +1896,14 @@ table.dataTable tbody tr {
 
 
 .action-menu {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .menu-toggle {
-    font-size: 18px;
-    cursor: pointer;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 /* scoped dropdown */
@@ -1928,10 +1951,27 @@ table.dataTable tbody tr {
 
 /* ===== FIX DROPDOWN ITEMS (MAKE ALL SAME LIKE VIEW) ===== */
 .dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
   color: #333 !important;
-  background: none !important;
-  border: none !important;
+  text-decoration: none;
+  cursor: pointer;
 }
+
+/* REMOVE SPECIAL COLORS */
+.dropdown-menu .dropdown-item i {
+  color: #6b7280;
+}
+
+/* HOVER */
+.dropdown-menu .dropdown-item:hover {
+  background: #f3f4f6 !important;
+  color: #000 !important;
+}
+
 
 /* Remove red/blue styles inside dropdown */
 .dropdown-menu .edit-btn,
@@ -1940,6 +1980,12 @@ table.dataTable tbody tr {
   color: #333 !important;
   border: none !important;
   background: none !important;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Uniform hover */
@@ -2086,7 +2132,7 @@ table.dataTable tbody tr {
 .view-page {
   height: 100%;
   width: 100%;
- border: 1px solid #f1f5f9;
+  border: 1px solid #f1f5f9;
   border-top: none;
   background: #ffffff;
   border-radius: 14px;
@@ -2174,7 +2220,7 @@ table.dataTable tbody tr {
 }
 
 .filter-bar {
-  margin-bottom: 0 !important;
+  margin-bottom: 18px;
 }
 
 .tab {
@@ -2298,7 +2344,8 @@ table.dataTable tbody tr {
 
 .client-details-layout {
   display: grid;
-  grid-template-columns: 1fr 360px; /* main + right panel */
+  grid-template-columns: 1fr 360px;
+  /* main + right panel */
   gap: 24px;
   height: 100%;
   align-items: stretch;
@@ -2311,7 +2358,7 @@ table.dataTable tbody tr {
 .client-middle {
   display: flex;
   flex-direction: column;
- max-width: 100%;
+  max-width: 100%;
 }
 
 .client-middle h2 {
@@ -2323,7 +2370,7 @@ table.dataTable tbody tr {
   font-weight: 600;
 }
 
-.view-page > div:first-child {
+.view-page>div:first-child {
   align-items: center;
 }
 
@@ -2352,60 +2399,63 @@ table.dataTable tbody tr {
 }
 
 .dropdown-item {
-    text-decoration: none;   /* removes underline */
-    color: inherit;          /* keeps your text color clean */
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  text-decoration: none;
+  /* removes underline */
+  color: inherit;
+  /* keeps your text color clean */
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dropdown-item:hover {
-    text-decoration: none;   /* ensure no underline on hover */
+  text-decoration: none;
+  /* ensure no underline on hover */
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
 .modal-box {
-    background: #fff;
-    padding: 20px 25px;
-    border-radius: 12px;
-    width: 400px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .modal-box h3 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .modal-actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .cancel-btn {
-    background: #e5e7eb;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .delete-btn {
-    background: #ef4444;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    text-decoration: none;
+  background: #ef4444;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
 }
 
 .modal-header h3 {
@@ -2416,11 +2466,11 @@ table.dataTable tbody tr {
 
 .custom-table td,
 .custom-table th {
-    vertical-align: middle;
-    padding: 8px 12px;
-    text-align: left;
-    height: 48px;
-    line-height: 1.2;
+  vertical-align: middle;
+  padding: 8px 12px;
+  text-align: left;
+  height: 48px;
+  line-height: 1.2;
 }
 
 .custom-table td {
@@ -2437,8 +2487,10 @@ table.dataTable tbody tr {
 }
 
 .work-card {
-  background: #eef2f7; /* slightly darker than page */
-  border: 1px solid #e5e7eb; /* subtle border for separation */
+  background: #eef2f7;
+  /* slightly darker than page */
+  border: 1px solid #e5e7eb;
+  /* subtle border for separation */
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
@@ -2586,7 +2638,22 @@ table.dataTable tbody tr {
   background: #f3f4f6;
 }
 
+.page-header-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
+.page-header-block h2 {
+  margin-bottom: 12px;
+  /* 🔥 space between title and tabs */
+}
+
+.tabs-wrapper {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
 
 
 /* ANIMATION */
