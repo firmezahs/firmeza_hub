@@ -152,21 +152,6 @@
   <div id="viewDrawer" class="drawer">
     <div class="drawer-content">
 
-      <div style="padding:10px;">
-        <button onclick="closeViewDrawer()" style="
-          width:40px;
-          height:40px;
-          border-radius:50%;
-          border:1.5px solid #5b5cff;
-          background:white;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          cursor:pointer;">
-          <i class="ri-arrow-left-line" style="color:#5b5cff;"></i>
-        </button>
-      </div>
-
       <div id="viewDrawerBody">Loading...</div>
 
     </div>
@@ -203,7 +188,6 @@
       $('.dropdown').hide();
     });
 
-    // ✅ FIXED HANDLER (NO UI CHANGE)
     $(document).on('click', '.action-click', function (e) {
       e.stopPropagation();
 
@@ -239,19 +223,36 @@
         .then(data => {
           body.innerHTML = `
             <div class="view-top-bar">
+
+              <button onclick="closeViewDrawer()" style="
+                width:42px;
+                height:42px;
+                border-radius:50%;
+                border:1.5px solid #5b5cff;
+                background:white;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                cursor:pointer;
+                color:#5b5cff;">
+                <i class="ri-arrow-left-line"></i>
+              </button>
+
               <div class="view-actions">
 
                 <button onclick="window.location.href='/clients/view-page/${data._id}'"
-                  style="background: transparent;border:1.5px solid #14b8a6;color:#14b8a6;">
-                  <i class="ri-eye-line"></i> View Details
+                  style="background:transparent;border:1.5px solid #14b8a6;color:#14b8a6;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                  <i class="ri-eye-line"></i>
                 </button>
 
-                <button class="action-click edit-btn" data-action="edit" data-id="${data._id}">
-                  <i class="ri-edit-line"></i> Edit
+                <button class="action-click edit-btn" data-action="edit" data-id="${data._id}"
+                  style="width:42px;height:42px;border-radius:10px;border:1.5px solid #5b5cff;color:#5b5cff;display:flex;align-items:center;justify-content:center;">
+                  <i class="ri-edit-line"></i>
                 </button>
 
-                <button class="action-click delete-btn-drawer" data-action="delete" data-id="${data._id}">
-                  <i class="ri-delete-bin-6-line"></i> Delete
+                <button class="action-click delete-btn-drawer" data-action="delete" data-id="${data._id}"
+                  style="width:42px;height:42px;border-radius:10px;border:1.5px solid #ef4444;color:#ef4444;display:flex;align-items:center;justify-content:center;">
+                  <i class="ri-delete-bin-6-line"></i>
                 </button>
 
               </div>
