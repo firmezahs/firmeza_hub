@@ -940,7 +940,7 @@ textarea,
 
 /* 👇 Highlight parent pages */
 .breadcrumb .active {
-  color: var(--primary);
+  color: #111827 !important; /* black */
   font-weight: 600;
 }
 
