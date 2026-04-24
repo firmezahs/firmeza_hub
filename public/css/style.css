@@ -1413,8 +1413,9 @@ textarea,
 }
 
 .custom-table tbody tr {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e5e7eb;
   height: 48px;
+  background: #fff;
 }
 
 

@@ -223,10 +223,10 @@
                                                                         <div class="action-menu">
                                                                             <i class="ri-more-2-fill menu-toggle"></i>
                                                                             <div class="dropdown">
-                                                                                <a href="/uploads/<%= doc.filePath %>"
-                                                                                    target="_blank">
-                                                                                    <i class="ri-eye-line"></i> View
-                                                                                </a>
+                                                                                <a href="#"
+   onclick="openViewer('<%= doc.filePath %>', '<%= doc.fileName %>'); return false;">
+   <i class="ri-eye-line"></i> View
+</a>
                                                                                 <a href="#"
                                                                                     onclick="openDeleteModal('/clients/documents/delete/<%= doc._id %>'); return false;">
                                                                                     <i class="ri-delete-bin-6-line"></i>
