@@ -4,6 +4,16 @@
 <head>
     <title><%= project ? 'Edit Project' : 'Add Project' %></title>
     <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .confirm-modal {
+            display: none;
+        }
+
+        .confirm-modal.show {
+            display: flex;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,73 +44,37 @@
 
             <div class="form-card">
 
-                <form action="<%= project ? '/clients/projects/edit/' + project._id : '/clients/projects/add/' + client._id %>" method="POST">
+                <!-- ✅ SAFE: store state in HTML attribute -->
+                <form id="projectForm"
+                      data-is-update="<%= project ? '1' : '0' %>"
+                      action="<%= project ? '/clients/projects/edit/' + project._id : '/clients/projects/add/' + client._id %>"
+                      method="POST">
 
-                    <!-- GRID -->
                     <div class="form-grid" style="grid-template-columns: 1fr;">
 
-                        <!-- TITLE -->
                         <div class="form-group">
                             <label>Title <span class="required">*</span></label>
-                            <input 
-                                type="text" 
-                                name="title" 
-                                placeholder="Enter Project Title" 
-                                required
-                                value="<%= project ? project.title : '' %>"
-                                style="
-                                    font-family: inherit;
-                                    font-size: 14px;
-                                    width: 100%;
-                                "
-                            >
+                            <input type="text" name="title" required
+                                value="<%= project ? project.title : '' %>">
                         </div>
 
-                        <!-- DESCRIPTION -->
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea 
-                                name="description" 
-                                placeholder="Enter Description"
-                                rows="5"
-                                style="
-                                    height:120px;
-                                    resize:none;
-                                    font-family: inherit;
-                                    font-size: 14px;
-                                    line-height: 1.4;
-                                    padding: 10px;
-                                    width: 100%;
-                                "
-                            ><%= project ? project.description : '' %></textarea>
+                            <textarea name="description" rows="5"><%= project && project.description ? project.description : '' %></textarea>
                         </div>
 
-                        <!-- DEVELOPER -->
                         <div class="form-group">
                             <label>Developer</label>
-                            <input 
-                                type="text" 
-                                name="developer" 
-                                placeholder="Enter Developer"
-                                value="<%= project && project.developer !== 'Not Assigned' ? project.developer : '' %>"
-                                style="
-                                    font-family: inherit;
-                                    font-size: 14px;
-                                    width: 100%;
-                                "
-                            >
+                            <input type="text" name="developer"
+                                value="<%= (project && project.developer && project.developer !== 'Not Assigned') ? project.developer : '' %>">
                         </div>
 
                     </div>
 
-                    <!-- ACTIONS -->
                     <div class="form-actions">
 
-                        <button 
-                            type="button" 
-                            class="cancel-btn"
-                            onclick="window.location.href='/clients/view-page/<%= client._id %>?tab=projects'"
-                        >
+                        <button type="button" class="cancel-btn"
+                            onclick="window.location.href='/clients/view-page/<%= client._id %>?tab=projects'">
                             Cancel
                         </button>
 
@@ -118,6 +92,97 @@
     </div>
 
 </div>
+
+<!-- MODAL -->
+<div id="confirmModal" class="confirm-modal <%= project ? 'update-modal' : '' %>">
+    <div class="confirm-box">
+
+        <div class="confirm-header">
+            <h3 id="modalTitle">Confirm</h3>
+            <span class="modal-close" id="closeModal">&times;</span>
+        </div>
+
+        <div class="confirm-body" id="modalMessage"></div>
+
+        <div class="confirm-actions">
+            <button id="cancelModal">Cancel</button>
+            <button id="confirmModalBtn">Confirm</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+const form = document.getElementById("projectForm");
+const modal = document.getElementById("confirmModal");
+const title = document.getElementById("modalTitle");
+const message = document.getElementById("modalMessage");
+
+const cancelBtn = document.getElementById("cancelModal");
+const closeBtn = document.getElementById("closeModal");
+const confirmBtn = document.getElementById("confirmModalBtn");
+
+let isSubmitting = false;
+
+// READ SAFE VALUE FROM HTML
+const isUpdate = form.dataset.isUpdate === "1";
+
+// OPEN MODAL
+function openModal(type, text, onConfirm) {
+    title.innerText = type;
+    message.innerText = text;
+
+    // RESET ALL STYLES
+    const box = modal.querySelector(".confirm-box");
+    box.style.borderLeft = "";
+    title.style.color = "";
+    confirmBtn.style.background = "";
+
+    // APPLY BASED ON TYPE
+    if (type.includes("Update")) {
+        // 🟠 ORANGE
+        box.style.borderLeft = "6px solid #f59e0b";
+        title.style.color = "#f59e0b";
+        confirmBtn.style.background = "#f59e0b";
+    } else {
+        // 🔵 BLUE (SAVE)
+        box.style.borderLeft = "6px solid #3b82f6";
+        title.style.color = "#3b82f6";
+        confirmBtn.style.background = "#3b82f6";
+    }
+
+    modal.classList.add("show");
+
+    confirmBtn.onclick = function () {
+        if (isSubmitting) return;
+        isSubmitting = true;
+        modal.classList.remove("show");
+        onConfirm();
+    };
+}
+
+// CLOSE MODAL
+function closeModal() {
+    modal.classList.remove("show");
+}
+
+cancelBtn.onclick = closeModal;
+closeBtn.onclick = closeModal;
+
+// SUBMIT
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    openModal(
+        isUpdate ? "Confirm Update" : "Confirm Save",
+        isUpdate
+            ? "Do you really want to update this project?"
+            : "Do you really want to save this project?",
+        () => form.submit()
+    );
+});
+</script>
 
 </body>
 </html>

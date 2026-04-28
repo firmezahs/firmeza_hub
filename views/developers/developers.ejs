@@ -262,11 +262,11 @@
                 });
 
                 function openViewDrawer(id) {
-  fetch("/developers/view/" + id)
-    .then(res => res.json())
-    .then(dev => {
+                  fetch("/developers/view/" + id)
+                    .then(res => res.json())
+                    .then(dev => {
 
-      document.getElementById("drawerBody").innerHTML = `
+                      document.getElementById("drawerBody").innerHTML = `
         <div style="padding: 22px;">
 
           <!-- HEADER (Clients style) -->
@@ -322,18 +322,18 @@
         </div>
       `;
 
-      document.getElementById("editBtn").onclick = () => {
-        window.location.href = "/developers/edit/" + id;
-      };
+                      document.getElementById("editBtn").onclick = () => {
+                        window.location.href = "/developers/edit/" + id;
+                      };
 
-      document.getElementById("deleteBtn").onclick = () => {
-        deleteId = id;
-        document.getElementById("deleteModal").style.display = "flex";
-      };
+                      document.getElementById("deleteBtn").onclick = () => {
+                        deleteId = id;
+                        document.getElementById("deleteModal").style.display = "flex";
+                      };
 
-      document.getElementById("viewDrawer").classList.add("active");
-    });
-}
+                      document.getElementById("viewDrawer").classList.add("active");
+                    });
+                }
 
                 function closeDrawer() {
                   document.getElementById("viewDrawer").classList.remove("active");

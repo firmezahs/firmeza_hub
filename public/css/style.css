@@ -2014,98 +2014,117 @@ table.dataTable tbody tr {
   background: #fff;
 }
 
-/* ================= SAVE CONFIRM MODAL ================= */
-
+/* OVERLAY */
 .confirm-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 9999;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
 }
 
-/* BOX */
+/* SHOW MODAL */
+.confirm-modal.show {
+    display: flex;
+}
+
+/* MODAL BOX */
 .confirm-box {
-  width: 650px;
-  max-width: 90%;
-  background: #fff;
-  border-radius: 12px;
-  padding: 25px 30px;
-  border-left: 6px solid #3b82f6;
+    width: 520px;
+    max-width: 90%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: fadeIn 0.2s ease-in-out;
 }
 
 /* HEADER */
 .confirm-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.confirm-header h2 {
-  color: #3b82f6;
-  font-weight: 600;
+.confirm-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #3b82f6; /* default blue */
+    margin: 0;
 }
 
-/* TEXT */
-.confirm-text {
-  margin: 15px 0 25px;
-  font-size: 18px;
-  color: #374151;
+/* CLOSE ICON */
+.modal-close {
+    font-size: 22px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: 0.2s;
 }
 
-/* ACTIONS */
+.modal-close:hover {
+    color: #111;
+}
+
+/* BODY TEXT */
+.confirm-body {
+    font-size: 16px;
+    color: #374151;
+    margin: 10px 0 25px;
+}
+
+/* ACTION BUTTONS */
 .confirm-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 }
 
-/* BUTTONS */
-.confirm-actions .cancel-btn {
-  background: #e5e7eb;
-  color: #374151;
-  border: none;
+/* CANCEL BUTTON */
+.confirm-actions button:first-child {
+    background: #e5e7eb;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+    transition: 0.2s;
 }
 
-.confirm-actions .confirm-btn {
-  background: #3b82f6;
-  color: white;
-  border: none;
+.confirm-actions button:first-child:hover {
+    background: #d1d5db;
 }
 
-.confirm-actions button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
+/* CONFIRM BUTTON */
+#confirmModalBtn {
+    background: #3b82f6;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: white;
+    transition: 0.2s;
 }
 
-.drawer.open {
-  right: 0;
+#confirmModalBtn:hover {
+    opacity: 0.9;
 }
 
-.drawer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* SMALL ANIMATION */
+@keyframes fadeIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
-
-.back-btn {
-  border: none;
-  background: #f1f3f9;
-  padding: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.drawer-actions button {
-  margin-left: 10px;
-}
-
 /* ===== RIGHT SIDE CLIENT VIEW (NEW) ===== */
 
 
@@ -2710,6 +2729,406 @@ table.dataTable tbody tr {
     opacity: 1;
     transform: translateX(0);
 }
+
+textarea {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+/* ===== FIXED UPLOAD CONFIRM MODAL ===== */
+
+#uploadModal {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* BOX */
+#uploadModal .modal-content {
+  background: #ffffff !important;
+  width: 650px;
+  max-width: 90%;
+  border-radius: 14px;
+  padding: 26px 30px;
+  border: none !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+/* HEADER */
+#uploadModal h3 {
+  color: #3b82f6;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* TEXT */
+#uploadModal p {
+  font-size: 18px;
+  color: #374151;
+  margin-bottom: 28px;
+}
+
+/* CLOSE ICON */
+#uploadModal .close-x {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 20px;
+  color: #3b82f6;
+  cursor: pointer;
+}
+
+/* BUTTON AREA */
+#uploadModal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+/* CANCEL BUTTON */
+#uploadModal .modal-actions button:first-child {
+  background: #e5e7eb;
+  color: #374151;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* CONFIRM BUTTON */
+#uploadModal .confirm-btn {
+  background: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+}
+
+#uploadModal .confirm-btn:hover {
+  background: #2563eb;
+}
+
+.client-right {
+    width: 340px;
+    background: #fafafa;
+    border-left: 1px solid #e5e7eb;
+    padding: 20px;
+}
+
+/* TOP BAR */
+.side-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #6366f1;
+    background: transparent;
+    color: #6366f1;
+    cursor: pointer;
+}
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.icon-btn.view {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.icon-btn.edit {
+    border-color: #6366f1;
+    color: #6366f1;
+}
+
+.icon-btn.delete {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* AVATAR */
+.side-avatar {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.avatar-box {
+    width: 100px;
+    height: 100px;
+    background: #e5e7eb;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #555;
+    margin: auto;
+}
+
+/* DETAILS */
+.side-details {
+    margin-top: 10px;
+}
+
+.detail-item {
+    margin-bottom: 18px;
+}
+
+.detail-item span {
+    font-size: 12px;
+    color: #6b7280;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.detail-item p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    z-index: 999;
+}
+
+.client-right {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 320px;
+    background: #fff;
+    padding: 20px;
+    z-index: 1000;
+
+    transform: translateX(100%);
+    transition: 0.3s ease;
+}
+
+.client-right.open {
+    transform: translateX(0);
+}
+
+#overlay.show {
+    display: block;
+}
+
+/* ================= MODAL OVERLAY ================= */
+
+.save-project-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    z-index: 9999;
+}
+
+.save-project-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ================= MODAL BOX ================= */
+
+.save-project-box {
+    background: #fff;
+    width: 420px;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    position: relative;
+    animation: popIn 0.2s ease-out;
+}
+
+/* ================= HEADER ================= */
+
+.save-project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.save-project-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f59e0b; /* orange */
+}
+
+/* close icon (×) */
+.modal-close {
+    font-size: 20px;
+    font-weight: 600;
+    color: #999;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+/* ================= BODY ================= */
+
+.save-project-body {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+/* ================= ACTIONS ================= */
+
+.save-project-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+/* cancel */
+.btn-cancel {
+    background: #e5e7eb;
+    color: #111;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #d1d5db;
+}
+
+/* confirm */
+.btn-save {
+    background: #f59e0b;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    background: #d97706;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes popIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ================= UPDATE CONFIRM MODAL (ORANGE) ================= */
+
+.update-modal .confirm-box {
+  border-left: 6px solid #f59e0b; /* orange */
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+}
+
+/* header */
+.update-modal .confirm-header h3 {
+  color: #f59e0b;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* body text */
+.update-modal .confirm-body {
+  font-size: 17px;
+  color: #374151;
+  margin: 18px 0 26px;
+}
+
+/* cancel button */
+.update-modal #cancelModal {
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+}
+
+/* confirm button */
+.update-modal #confirmModalBtn {
+  background: #f59e0b;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+}
+
+.update-modal #confirmModalBtn:hover {
+  background: #d97706;
+}
+
+/* close icon */
+.update-modal .modal-close {
+  color: #9ca3af;
+}
+
+.update-modal .modal-close:hover {
+  color: #111827;
+}
+
+.client-form textarea,
+.form-group textarea {
+  width: 100%;
+  height: 44px;              /* same as input */
+  padding: 12px 14px;        /* same padding */
+  border: 1px solid #e5e7eb; /* same border */
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  resize: none;              /* optional: disables resize */
+  line-height: 1.2;
+}
+
 
 
 /* ANIMATION */

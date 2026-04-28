@@ -210,7 +210,7 @@ router.get("/view-page/:id", async (req, res) => {
     if (!client) return res.status(404).send("Client not found");
 
     const tab = req.query.tab || "credentials";
-    const projectId = req.query.projectId; 
+    const projectId = req.query.projectId;
 
     const credentials = await Credential.find({ clientId: req.params.id })
       .sort({ createdAt: -1 });
@@ -226,12 +226,12 @@ router.get("/view-page/:id", async (req, res) => {
 
     let selectedProject = null;
 
-if (projectId) {
-  selectedProject = await Projects.findOne({
-    _id: projectId,
-    clientId: req.params.id
-  });
-}
+    if (projectId) {
+      selectedProject = await Projects.findOne({
+        _id: projectId,
+        clientId: req.params.id
+      });
+    }
 
     // GROUP WORK UPDATES
     const groupedUpdates = {};
@@ -248,11 +248,11 @@ if (projectId) {
       credentials: credentials || [],
       workupdates: workupdates || [],
       projects: projects || [],
-      selectedProject, 
+      selectedProject,
       groupedUpdates,
       documents,
       activePage: "clients",
-      tab
+      currentTab: tab
     });
 
   } catch (err) {
@@ -293,8 +293,8 @@ router.get("/credentials/add/:id", async (req, res) => {
 
   res.render("clients/credentials/addCredentials", {
     client,
-    isEdit: false,      
-    credential: null,  
+    isEdit: false,
+    credential: null,
     activePage: "clients"
   });
 });
@@ -315,8 +315,8 @@ router.post("/credentials/add/:id", async (req, res) => {
     await newCredential.save();
 
     res.redirect(
-  `/clients/view-page/${req.params.id}?tab=credentials&success=created`
-);
+      `/clients/view-page/${req.params.id}?tab=credentials&success=created`
+    );
   } catch (err) {
     console.error(err);
     res.status(500).send("Error saving credential");
@@ -334,10 +334,10 @@ router.get("/credentials/delete/:id", async (req, res) => {
     await Credential.findByIdAndDelete(req.params.id);
 
     res.redirect(
-  "/clients/view-page/" +
-  credential.clientId +
-  "?tab=credentials&success=deleted"
-);
+      "/clients/view-page/" +
+      credential.clientId +
+      "?tab=credentials&success=deleted"
+    );
 
   } catch (error) {
     console.error(error);
@@ -387,10 +387,10 @@ router.post("/credentials/edit/:id", async (req, res) => {
     });
 
     res.redirect(
-  "/clients/view-page/" +
-  credential.clientId +
-  "?tab=credentials&success=updated"
-);
+      "/clients/view-page/" +
+      credential.clientId +
+      "?tab=credentials&success=updated"
+    );
   } catch (err) {
     res.redirect("/clients?error=" + encodeURIComponent("Update failed"));
   }
@@ -476,7 +476,7 @@ router.get("/workupdate/edit/:id", async (req, res) => {
     res.render("clients/workupdate/addWorkUpdate", {
       client,
       work,
-      isEdit: true   
+      isEdit: true
     });
 
   } catch (err) {
@@ -529,7 +529,7 @@ router.post("/documents/add/:id", upload.array("files", 5), async (req, res) => 
 
     await Document.insertMany(docs);
 
-    res.redirect(`/clients/view-page/${req.params.id}?tab=documents`);
+    res.redirect(`/clients/view-page/${req.params.id}?tab=documents&success=uploaded`);
   } catch (err) {
     console.error(err);
     res.send("Upload failed");
@@ -540,9 +540,16 @@ router.get("/documents/delete/:id", async (req, res) => {
   try {
     const doc = await Document.findById(req.params.id);
 
+    if (!doc) {
+      return res.redirect("/clients?error=Not found");
+    }
+
     await Document.findByIdAndDelete(req.params.id);
 
-    res.redirect(`/clients/view-page/${doc.clientId}?tab=documents`);
+    res.redirect(
+      `/clients/view-page/${doc.clientId}?tab=documents&success=doc_deleted`
+    );
+
   } catch (err) {
     res.send("Delete failed");
   }
@@ -585,21 +592,21 @@ router.post("/documents/confirm-upload/:id", async (req, res) => {
 
     req.session.pendingFiles = []; // clear session
 
-    res.redirect(`/clients/view-page/${req.params.id}?tab=documents`);
+    res.redirect(`/clients/view-page/${req.params.id}?tab=documents&success=uploaded`);
   } catch (err) {
     console.error(err);
     res.send("Upload failed");
   }
 });
 
-router.get("/documents/remove-temp/:index", (req, res) => {
+router.get("/documents/remove-temp/:clientId/:index", (req, res) => {
   const index = parseInt(req.params.index);
 
   if (req.session.pendingFiles) {
     req.session.pendingFiles.splice(index, 1);
   }
 
-  res.redirect("back");
+  res.redirect(`/clients/documents/review/${req.params.clientId}`);
 });
 
 router.post("/documents/review/:id", upload.array("files", 5), (req, res) => {
@@ -612,6 +619,7 @@ router.post("/documents/review/:id", upload.array("files", 5), (req, res) => {
   }
 });
 
+
 router.get("/projects/add/:id", async (req, res) => {
   const client = await Client.findById(req.params.id);
 
@@ -619,7 +627,7 @@ router.get("/projects/add/:id", async (req, res) => {
 
   res.render("clients/projects/addProject", {
     client,
-    project: null, 
+    project: null,
     isEdit: false,
     activePage: "clients"
   });
@@ -636,7 +644,7 @@ router.post("/projects/add/:id", async (req, res) => {
       developer: developer?.trim() ? developer.trim() : "Not Assigned"
     });
 
-    res.redirect(`/clients/view-page/${req.params.id}?tab=projects`);
+    res.redirect(`/clients/view-page/${req.params.id}?tab=projects&success=created`);
 
   } catch (err) {
     console.error(err);
@@ -659,11 +667,10 @@ router.get("/projects/delete/:id", async (req, res) => {
     await Projects.findByIdAndDelete(req.params.id);
 
     res.redirect(
-      "/clients/view-page/" +
-        clientId +
-        "?tab=projects&success=" +
-        encodeURIComponent("Project deleted successfully")
-    );
+  "/clients/view-page/" +
+  clientId +
+  "?tab=projects&success=deleted"
+);
 
   } catch (error) {
     console.error(error);
@@ -686,7 +693,7 @@ router.get("/projects/edit/:id", async (req, res) => {
 
     res.render("clients/projects/addProject", {
       client,
-      project,    
+      project,
       isEdit: true,
       activePage: "clients"
     });
@@ -714,11 +721,10 @@ router.post("/projects/edit/:id", async (req, res) => {
     });
 
     res.redirect(
-      "/clients/view-page/" +
-        project.clientId +
-        "?tab=projects&success=" +
-        encodeURIComponent("Project updated successfully")
-    );
+  "/clients/view-page/" +
+  project.clientId +
+  "?tab=projects&success=updated"
+);
 
   } catch (err) {
     console.error(err);
