@@ -1,3 +1,6 @@
+<!-- views/partials/sidebar.ejs -->
+<!-- Replace your existing sidebar partial with this -->
+
 <div class="sidebar-new">
   <h2>Firmeza</h2>
 
@@ -9,13 +12,18 @@
     <i class="ri-user-fill"></i> Clients
   </a>
 
-  <a href="/developers" class="<%= activePage === 'developers' ? 'active' : '' %>">
-    <i class="ri-user-fill"></i> Developers
-  </a>
+  <!-- Admin-only links -->
+  <% if (user && user.role === 'admin') { %>
 
-  <a href="/services" class="<%= activePage === 'services' ? 'active' : '' %>">
-    <i class="ri-user-fill"></i> Services
-  </a>
+    <a href="/developers" class="<%= activePage === 'developers' ? 'active' : '' %>">
+      <i class="ri-team-line"></i> Developers
+    </a>
+
+    <a href="/services" class="<%= activePage === 'services' ? 'active' : '' %>">
+      <i class="ri-customer-service-2-line"></i> Services
+    </a>
+
+  <% } %>
 
   <a href="/auth/logout">
     <i class="ri-logout-box-r-line"></i> Logout

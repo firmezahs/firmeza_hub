@@ -317,8 +317,8 @@
                                                                         </td>
 
                                                                         <td>
-                                                                            <%= p.developer || 'Not Assigned' %>
-                                                                        </td>
+    <%= p.developer?.name || 'Not Assigned' %>
+</td>
 
                                                                         <td style="text-align:right;">
                                                                             <div class="action-menu">

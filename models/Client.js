@@ -21,6 +21,10 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  developerId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Developer"
+},
   gstNumber: {
     type: String
   },

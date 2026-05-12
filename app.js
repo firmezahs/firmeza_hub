@@ -12,6 +12,9 @@ import clientRoutes from "./routes/clientRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import developerRoutes from "./routes/developerRoutes.js";
 
+// Middleware
+import { requireAuth } from "./middleware/authMiddleware.js";
+
 // Load env
 dotenv.config({ path: "./config.env" });
 
@@ -24,12 +27,10 @@ const upload = multer({ dest: "uploads/" });
 
 // Active sidebar highlight
 app.use((req, res, next) => {
-  const path = req.path;
-
-  if (path.startsWith("/clients")) res.locals.activePage = "clients";
-  else if (path.startsWith("/developers")) res.locals.activePage = "developers";
-  else if (path.startsWith("/dashboard")) res.locals.activePage = "dashboard";
-
+  const p = req.path;
+  if (p.startsWith("/clients"))    res.locals.activePage = "clients";
+  else if (p.startsWith("/developers")) res.locals.activePage = "developers";
+  else if (p.startsWith("/dashboard"))  res.locals.activePage = "dashboard";
   next();
 });
 
@@ -43,20 +44,27 @@ app.use(
     secret: "firmeza-secret",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // true only in HTTPS
+    cookie: { secure: false }
   })
 );
 
-// ✅ GLOBAL USER (FIXED POSITION)
+// ── GLOBAL USER ──────────────────────────────────────────────────────────────
+// Builds res.locals.user with role for ALL routes so every EJS partial
+// (especially the sidebar) always has access to user.role.
 app.use((req, res, next) => {
-  // Skip auth pages
-  if (req.path.startsWith("/auth")) {
-    return next();
+  if (req.session?.user) {
+    // Admin session → inject role: "admin"
+    res.locals.user = { ...req.session.user, role: "admin" };
+  } else if (req.session?.developer) {
+    // Developer session → inject role: "developer" + developerId
+    res.locals.user = {
+      ...req.session.developer,
+      role: "developer",
+      developerId: req.session.developer._id
+    };
+  } else {
+    res.locals.user = null;
   }
-
-  // Make user available in all EJS views
-  res.locals.user = req.session?.user || null;
-
   next();
 });
 
@@ -83,39 +91,48 @@ mongoose
 // ROUTES
 // =======================
 
-// API routes
-app.use("/auth", authRoutes);
-app.use("/clients", clientRoutes);
-app.use("/services", serviceRoutes);
+app.use("/auth",       authRoutes);
+app.use("/clients",    clientRoutes);
+app.use("/services",   serviceRoutes);
 app.use("/developers", developerRoutes);
 
 // Redirect root → login
-app.get("/", (req, res) => {
-  res.redirect("/auth/login");
-});
+app.get("/", (req, res) => res.redirect("/auth/login"));
 
 // Health check
-app.get("/health", (req, res) => {
-  res.send("Server is running ✅");
-});
+app.get("/health", (req, res) => res.send("Server is running ✅"));
 
-// ✅ Dashboard (FIXED)
-app.get("/dashboard", (req, res) => {
-  // Optional protection
-  if (!req.session.user) {
-    return res.redirect("/auth/login");
+// ── DASHBOARD ────────────────────────────────────────────────────────────────
+// Use requireAuth so req.currentUser is set, then query counts for admin
+import Client from "./models/Client.js";
+import WorkUpdate from "./models/WorkUpdate.js";
+
+app.get("/dashboard", requireAuth, async (req, res) => {
+  try {
+    const user = req.currentUser;  // set by requireAuth
+
+    let clientCount  = 0;
+    let pendingCount = 0;
+
+    if (user.role === "admin") {
+      clientCount  = await Client.countDocuments();
+      pendingCount = await WorkUpdate.countDocuments({ status: "Pending" });
+    }
+
+    res.render("dashboard", {
+      activePage:   "dashboard",
+      clientCount,
+      pendingCount
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
-
-  res.render("dashboard"); // user comes from res.locals
 });
 
 // =======================
 // SERVER
 // =======================
-
-
 const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

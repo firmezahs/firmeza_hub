@@ -4,8 +4,15 @@ const credentialSchema = new mongoose.Schema(
   {
     clientId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Client", // 🔗 relation to Client
+      ref: "Client",
       required: true
+    },
+
+    // NEW: links credential to a specific project for developer filtering
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      default: null
     },
 
     title: {
@@ -33,7 +40,7 @@ const credentialSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true 
+    timestamps: true
   }
 );
 

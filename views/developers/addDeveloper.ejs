@@ -139,7 +139,10 @@
   <div class="modal-content modern <%= (typeof developer !== 'undefined' && developer) ? 'warning' : 'primary' %>">
 
     <div class="modal-header">
-      <h3>Confirm</h3>
+      <h3>
+        <%= (typeof developer !== 'undefined' && developer) ? 'Confirm' : 'Confirm Save' %>
+      </h3>
+
       <span class="close-btn" onclick="closeSaveModal()">×</span>
     </div>
 
@@ -149,12 +152,17 @@
     </p>
 
     <div class="modal-actions">
-      <button onclick="closeSaveModal()">Cancel</button>
+      <button type="button" onclick="closeSaveModal()">
+        Cancel
+      </button>
 
       <button 
+        type="button"
         class="<%= (typeof developer !== 'undefined' && developer) ? 'update-btn' : 'save-btn' %>" 
         onclick="confirmSave()">
-        Confirm
+
+        <%= (typeof developer !== 'undefined' && developer) ? 'Confirm' : 'Save' %>
+
       </button>
     </div>
 
@@ -162,6 +170,7 @@
 </div>
 
 <script>
+
   const form = document.getElementById("developerForm");
   const submitBtn = document.getElementById("submitBtn");
 
@@ -174,28 +183,37 @@
   }
 
   function checkFormValidity() {
+
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const role = roleInput.value;
 
     submitBtn.disabled = !(name && validateEmail(email) && role);
+
   }
 
   nameInput.addEventListener("input", checkFormValidity);
   emailInput.addEventListener("input", checkFormValidity);
   roleInput.addEventListener("change", checkFormValidity);
 
+  // INITIAL CHECK
+  checkFormValidity();
+
+  // OPEN MODAL
   submitBtn.addEventListener("click", () => {
     document.getElementById("saveModal").style.display = "flex";
   });
 
+  // CLOSE MODAL
   function closeSaveModal() {
     document.getElementById("saveModal").style.display = "none";
   }
 
+  // CONFIRM SAVE / UPDATE
   function confirmSave() {
     form.submit();
   }
+
 </script>
 
 </body>

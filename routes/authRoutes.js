@@ -1,48 +1,82 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import Developer from "../models/Developer.js";
+import Client from "../models/Client.js";
+import WorkUpdate from "../models/WorkUpdate.js";
+import { requireAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Show login page
+// Login page
 router.get("/login", (req, res) => {
-  if (req.session.user) {
+  if (req.session.user || req.session.developer) {
     return res.redirect("/dashboard");
   }
-  res.render("login");
+  res.render("login", { error: null, formData: {} });
 });
 
-// Handle login form
+// Login handler
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email.trim().toLowerCase();
+  const password = req.body.password;
 
   try {
-    console.log("Login attempt:", email);
-
+    // ADMIN LOGIN
     const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.render("login", { error: "User not found" });
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        req.session.user = {
+          _id: user._id,
+          name: user.name,
+          email: user.email
+        };
+        return res.redirect("/dashboard");
+      }
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.render("login", { error: "Invalid password" });
+    // DEVELOPER LOGIN
+    const developer = await Developer.findOne({ email, status: "active" });
+    if (developer && password === "123456") {
+      req.session.developer = {
+        _id: developer._id,
+        dev_id: developer.dev_id,
+        name: developer.name,
+        email: developer.email,
+        role: developer.role
+      };
+      return res.redirect("/dashboard");
     }
 
-    // ✅ Save user in session
-    req.session.user = {
-      _id: user._id,
-      name: user.name,
-      email: user.email
-    };
-
-    return res.redirect("/dashboard");
+    return res.render("login", { error: "Invalid email or password", formData: { email } });
 
   } catch (err) {
     console.error(err);
-    res.render("login", { error: "Server error" });
+    return res.render("login", { error: "Server error", formData: { email } });
+  }
+});
+
+// Dashboard
+router.get("/dashboard", requireAuth, async (req, res) => {
+  try {
+    const user = req.currentUser;
+    let clientCount = 0;
+    let pendingCount = 0;
+
+    if (user.role === "admin") {
+      clientCount  = await Client.countDocuments();
+      pendingCount = await WorkUpdate.countDocuments({ status: "pending" });
+    }
+
+    res.render("dashboard", {
+      activePage: "dashboard",
+      clientCount,
+      pendingCount
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
 });
 

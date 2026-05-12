@@ -2,7 +2,9 @@
 <html>
 
 <head>
-    <title><%= project ? 'Edit Project' : 'Add Project' %></title>
+    <title>
+        <%= project ? 'Edit Project' : 'Add Project' %>
+    </title>
     <link rel="stylesheet" href="/css/style.css">
 
     <style>
@@ -18,171 +20,186 @@
 
 <body>
 
-<div class="admin-container">
+    <div class="admin-container">
 
-    <%- include('../../partials/sidebar', { activePage: 'clients' }) %>
+        <%- include('../../partials/sidebar', { activePage: 'clients' }) %>
 
-    <div class="main-new">
-        <%- include('../../partials/header') %>
+            <div class="main-new">
+                <%- include('../../partials/header') %>
 
-        <div class="content-area">
+                    <div class="content-area">
 
-            <!-- BREADCRUMB -->
-            <div class="breadcrumb">
-                <a href="/dashboard">Dashboard</a>
-                <span> / </span>
-                <a href="/clients">Clients</a>
-                <span> / </span>
-                <a href="/clients/view-page/<%= client._id %>?tab=projects">Projects</a>
-                <span> / </span>
-                <span class="active"><%= project ? 'Edit Project' : 'Add Project' %></span>
+                        <!-- BREADCRUMB -->
+                        <div class="breadcrumb">
+                            <a href="/dashboard">Dashboard</a>
+                            <span> / </span>
+                            <a href="/clients">Clients</a>
+                            <span> / </span>
+                            <a href="/clients/view-page/<%= client._id %>?tab=projects">Projects</a>
+                            <span> / </span>
+                            <span class="active">
+                                <%= project ? 'Edit Project' : 'Add Project' %>
+                            </span>
+                        </div>
+
+                        <h2 style="margin-bottom:15px;">
+                            <%= project ? 'Edit Project' : 'Add Project' %>
+                        </h2>
+
+                        <div class="form-card">
+
+                            <!-- ✅ SAFE: store state in HTML attribute -->
+                            <form id="projectForm" data-is-update="<%= project ? '1' : '0' %>"
+                                action="<%= project ? '/clients/projects/edit/' + project._id : '/clients/projects/add/' + client._id %>"
+                                method="POST">
+
+                                <div class="form-grid" style="grid-template-columns: 1fr;">
+
+                                    <div class="form-group">
+                                        <label>Title <span class="required">*</span></label>
+                                        <input type="text" name="title" required
+                                            value="<%= project ? project.title : '' %>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea name="description"
+                                            rows="5"><%= project && project.description ? project.description : '' %></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Developer</label>
+
+                                        <select name="developer">
+                                            <option value="">Select Developer</option>
+
+                                            <% developers.forEach(dev=> { %>
+                                                <option value="<%= dev._id %>" <%=project && project.developer &&
+                                                    project.developer.toString()===dev._id.toString() ? 'selected' : ''
+                                                    %>>
+
+                                                    <%= dev.name %> (<%= dev.dev_id %>)
+                                                </option>
+                                                <% }) %>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-actions">
+
+                                    <button type="button" class="cancel-btn"
+                                        onclick="window.location.href='/clients/view-page/<%= client._id %>?tab=projects'">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="save-btn">
+                                        <%= project ? 'Update Project' : 'Save Project' %>
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
             </div>
 
-            <h2 style="margin-bottom:15px;">
-                <%= project ? 'Edit Project' : 'Add Project' %>
-            </h2>
+    </div>
 
-            <div class="form-card">
+    <!-- MODAL -->
+    <div id="confirmModal" class="confirm-modal <%= project ? 'update-modal' : '' %>">
+        <div class="confirm-box">
 
-                <!-- ✅ SAFE: store state in HTML attribute -->
-                <form id="projectForm"
-                      data-is-update="<%= project ? '1' : '0' %>"
-                      action="<%= project ? '/clients/projects/edit/' + project._id : '/clients/projects/add/' + client._id %>"
-                      method="POST">
+            <div class="confirm-header">
+                <h3 id="modalTitle">Confirm</h3>
+                <span class="modal-close" id="closeModal">&times;</span>
+            </div>
 
-                    <div class="form-grid" style="grid-template-columns: 1fr;">
+            <div class="confirm-body" id="modalMessage"></div>
 
-                        <div class="form-group">
-                            <label>Title <span class="required">*</span></label>
-                            <input type="text" name="title" required
-                                value="<%= project ? project.title : '' %>">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea name="description" rows="5"><%= project && project.description ? project.description : '' %></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Developer</label>
-                            <input type="text" name="developer"
-                                value="<%= (project && project.developer && project.developer !== 'Not Assigned') ? project.developer : '' %>">
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <button type="button" class="cancel-btn"
-                            onclick="window.location.href='/clients/view-page/<%= client._id %>?tab=projects'">
-                            Cancel
-                        </button>
-
-                        <button type="submit" class="save-btn">
-                            <%= project ? 'Update Project' : 'Save Project' %>
-                        </button>
-
-                    </div>
-
-                </form>
-
+            <div class="confirm-actions">
+                <button id="cancelModal">Cancel</button>
+                <button id="confirmModalBtn">Confirm</button>
             </div>
 
         </div>
     </div>
 
-</div>
+    <!-- SCRIPT -->
+    <script>
+        const form = document.getElementById("projectForm");
+        const modal = document.getElementById("confirmModal");
+        const title = document.getElementById("modalTitle");
+        const message = document.getElementById("modalMessage");
 
-<!-- MODAL -->
-<div id="confirmModal" class="confirm-modal <%= project ? 'update-modal' : '' %>">
-    <div class="confirm-box">
+        const cancelBtn = document.getElementById("cancelModal");
+        const closeBtn = document.getElementById("closeModal");
+        const confirmBtn = document.getElementById("confirmModalBtn");
 
-        <div class="confirm-header">
-            <h3 id="modalTitle">Confirm</h3>
-            <span class="modal-close" id="closeModal">&times;</span>
-        </div>
+        let isSubmitting = false;
 
-        <div class="confirm-body" id="modalMessage"></div>
+        // READ SAFE VALUE FROM HTML
+        const isUpdate = form.dataset.isUpdate === "1";
 
-        <div class="confirm-actions">
-            <button id="cancelModal">Cancel</button>
-            <button id="confirmModalBtn">Confirm</button>
-        </div>
+        // OPEN MODAL
+        function openModal(type, text, onConfirm) {
+            title.innerText = type;
+            message.innerText = text;
 
-    </div>
-</div>
+            // RESET ALL STYLES
+            const box = modal.querySelector(".confirm-box");
+            box.style.borderLeft = "";
+            title.style.color = "";
+            confirmBtn.style.background = "";
 
-<!-- SCRIPT -->
-<script>
-const form = document.getElementById("projectForm");
-const modal = document.getElementById("confirmModal");
-const title = document.getElementById("modalTitle");
-const message = document.getElementById("modalMessage");
+            // APPLY BASED ON TYPE
+            if (type.includes("Update")) {
+                // 🟠 ORANGE
+                box.style.borderLeft = "6px solid #f59e0b";
+                title.style.color = "#f59e0b";
+                confirmBtn.style.background = "#f59e0b";
+            } else {
+                // 🔵 BLUE (SAVE)
+                box.style.borderLeft = "6px solid #3b82f6";
+                title.style.color = "#3b82f6";
+                confirmBtn.style.background = "#3b82f6";
+            }
 
-const cancelBtn = document.getElementById("cancelModal");
-const closeBtn = document.getElementById("closeModal");
-const confirmBtn = document.getElementById("confirmModalBtn");
+            modal.classList.add("show");
 
-let isSubmitting = false;
+            confirmBtn.onclick = function () {
+                if (isSubmitting) return;
+                isSubmitting = true;
+                modal.classList.remove("show");
+                onConfirm();
+            };
+        }
 
-// READ SAFE VALUE FROM HTML
-const isUpdate = form.dataset.isUpdate === "1";
+        // CLOSE MODAL
+        function closeModal() {
+            modal.classList.remove("show");
+        }
 
-// OPEN MODAL
-function openModal(type, text, onConfirm) {
-    title.innerText = type;
-    message.innerText = text;
+        cancelBtn.onclick = closeModal;
+        closeBtn.onclick = closeModal;
 
-    // RESET ALL STYLES
-    const box = modal.querySelector(".confirm-box");
-    box.style.borderLeft = "";
-    title.style.color = "";
-    confirmBtn.style.background = "";
+        // SUBMIT
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    // APPLY BASED ON TYPE
-    if (type.includes("Update")) {
-        // 🟠 ORANGE
-        box.style.borderLeft = "6px solid #f59e0b";
-        title.style.color = "#f59e0b";
-        confirmBtn.style.background = "#f59e0b";
-    } else {
-        // 🔵 BLUE (SAVE)
-        box.style.borderLeft = "6px solid #3b82f6";
-        title.style.color = "#3b82f6";
-        confirmBtn.style.background = "#3b82f6";
-    }
-
-    modal.classList.add("show");
-
-    confirmBtn.onclick = function () {
-        if (isSubmitting) return;
-        isSubmitting = true;
-        modal.classList.remove("show");
-        onConfirm();
-    };
-}
-
-// CLOSE MODAL
-function closeModal() {
-    modal.classList.remove("show");
-}
-
-cancelBtn.onclick = closeModal;
-closeBtn.onclick = closeModal;
-
-// SUBMIT
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    openModal(
-        isUpdate ? "Confirm Update" : "Confirm Save",
-        isUpdate
-            ? "Do you really want to update this project?"
-            : "Do you really want to save this project?",
-        () => form.submit()
-    );
-});
-</script>
+            openModal(
+                isUpdate ? "Confirm Update" : "Confirm Save",
+                isUpdate
+                    ? "Do you really want to update this project?"
+                    : "Do you really want to save this project?",
+                () => form.submit()
+            );
+        });
+    </script>
 
 </body>
+
 </html>

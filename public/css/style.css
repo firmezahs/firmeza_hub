@@ -3129,6 +3129,99 @@ textarea {
   line-height: 1.2;
 }
 
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+
+  border: 1.5px solid #6366f1;
+  background: transparent;
+
+  color: #6366f1;
+  font-weight: 500;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  background: #6366f1;
+  color: white;
+}
+
+.client-icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f5f7fb;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.client-icon-btn i {
+  font-size: 18px;
+  color: #5a607f;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.client-icon-btn:hover {
+  background: #4f46e5; /* primary color */
+  transform: translateY(-1px);
+}
+
+.client-icon-btn:hover i {
+  color: #fff;
+}
+
+/* Click */
+.client-icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Optional: focus ring */
+.client-icon-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.client-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f7fb;
+  border: 1px solid #e3e6ef;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.client-btn i {
+  font-size: 16px;
+  color: #4f46e5;
+}
+
+.client-btn:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.client-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
 
 
 /* ANIMATION */

@@ -7,6 +7,34 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    .client-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .client-btn:hover {
+      background: #f9fafb;
+    }
+
+    .client-number {
+      background: #4f46e5;
+      color: white;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      min-width: 22px;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
@@ -15,348 +43,358 @@
 
     <%- include('../partials/sidebar', { activePage: activePage }) %>
 
-      <div class="main-new">
+    <div class="main-new">
 
-        <%- include('../partials/header') %>
+      <%- include('../partials/header') %>
 
-          <div class="content-area">
+      <div class="content-area">
 
-            <p class="breadcrumb">
-              <a href="/dashboard" class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">
-                Dashboard
-              </a> /
-              <a href="/developers" class="<%= activePage === 'developers' ? 'dark' : 'light' %>">
-                Developers
-              </a>
-            </p>
+        <p class="breadcrumb">
+          <a href="/dashboard" class="<%= activePage === 'dashboard' ? 'dark' : 'light' %>">Dashboard</a> /
+          <a href="/developers" class="<%= activePage === 'developers' ? 'dark' : 'light' %>">Developers</a>
+        </p>
 
-            <div class="page-header-new">
-              <h1>
-                Developers
-                <span class="badge">
-                  <%= developers.length %>
-                </span>
-              </h1>
-            </div>
+        <div class="page-header-new">
+          <h1>
+            Developers
+            <span class="badge"><%= developers.length %></span>
+          </h1>
+        </div>
 
-            <div class="filter-bar">
+        <div class="filter-bar">
 
-              <div class="search-box">
-                <i class="ri-search-line"></i>
-                <input type="text" id="searchInput" placeholder="Search developers..." />
-              </div>
+          <div class="search-box">
+            <i class="ri-search-line"></i>
+            <input type="text" id="searchInput" placeholder="Search developers..." />
+          </div>
 
-              <div class="right-controls">
-                <button class="add-btn" onclick="window.location.href='/developers/add'">
-                  <i class="ri-add-line"></i> Add Developer
-                </button>
+          <div class="right-controls">
+            <button class="add-btn" onclick="window.location.href='/developers/add'">
+              <i class="ri-add-line"></i> Add Developer
+            </button>
 
-                <select class="entries-dropdown">
-                  <option>10</option>
-                  <option>25</option>
-                  <option>50</option>
-                </select>
-              </div>
+            <select class="entries-dropdown">
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+          </div>
 
-            </div>
+        </div>
 
-            <div class="table-wrapper">
-              <table class="custom-table" id="developersTable">
+        <div class="table-wrapper">
+          <table class="custom-table" id="developersTable">
 
-                <thead>
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>Developer</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Clients</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <% if (developers && developers.length > 0) { %>
+                <% developers.forEach(dev => { %>
+
                   <tr>
-                    <th><input type="checkbox" id="select-all"></th>
-                    <th>Developer</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th></th>
+
+                    <td><input type="checkbox" class="row-checkbox"></td>
+
+                    <td>
+                      <div style="display:flex; flex-direction:column;">
+                        <span style="color:#8a8fa3; font-size:13px;"><%= dev.dev_id %></span>
+                        <span style="font-weight:600; font-size:15px;"><%= dev.name %></span>
+                      </div>
+                    </td>
+
+                    <td><%= dev.email %></td>
+
+                    <td style="text-transform: capitalize;"><%= dev.role %></td>
+
+                    <td>
+                      <button 
+                        class="client-btn" 
+                        data-id="<%= dev._id %>"
+                        onclick="viewClients('<%= dev._id %>')"
+                      >
+                        <i class="ri-team-line"></i>
+                        <span class="client-number"><%= dev.clientCount || 0 %></span>
+                      </button>
+                    </td>
+
+                    <td class="actions">
+                      <div class="action-menu">
+                        <i class="ri-more-2-fill menu-toggle"></i>
+
+                        <div class="dropdown">
+                          <!-- <div class="dropdown-item action-click" data-action="view" data-id="<%= dev._id %>">
+                            <i class="ri-eye-line"></i> View
+                          </div> -->
+
+                          <div class="dropdown-item action-click" data-action="edit" data-id="<%= dev._id %>">
+                            <i class="ri-edit-line"></i> Edit
+                          </div>
+
+                          <div class="dropdown-item action-click delete-text" data-action="delete" data-id="<%= dev._id %>">
+                            <i class="ri-delete-bin-6-line"></i> Delete
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
                   </tr>
-                </thead>
 
-                <tbody>
+                <% }) %>
+              <% } else { %>
 
-                  <% if (developers && developers.length> 0) { %>
+                <tr>
+                  <td colspan="6" style="text-align:center;">No developers found</td>
+                </tr>
 
-                    <% developers.forEach(dev=> { %>
-                      <tr>
+              <% } %>
 
-                        <td><input type="checkbox" class="row-checkbox"></td>
+            </tbody>
 
-                        <td>
-                          <div style="display:flex; flex-direction:column;">
-                            <span style="color:#8a8fa3; font-size:13px;">
-                              <%= dev.dev_id %>
-                            </span>
-                            <span style="font-weight:600; font-size:15px;">
-                              <%= dev.name %>
-                            </span>
-                          </div>
-                        </td>
-
-                        <td>
-                          <%= dev.email %>
-                        </td>
-
-                        <td style="text-transform: capitalize;">
-                          <%= dev.role %>
-                        </td>
-
-                        <td class="actions">
-                          <div class="action-menu">
-                            <i class="ri-more-2-fill menu-toggle"></i>
-
-                            <div class="dropdown">
-                              <div class="dropdown-item action-click" data-action="view" data-id="<%= dev._id %>">
-                                <i class="ri-eye-line"></i> View
-                              </div>
-
-                              <div class="dropdown-item action-click" data-action="edit" data-id="<%= dev._id %>">
-                                <i class="ri-edit-line"></i> Edit
-                              </div>
-
-                              <div class="dropdown-item action-click delete-text" data-action="delete"
-                                data-id="<%= dev._id %>">
-                                <i class="ri-delete-bin-6-line"></i> Delete
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                      </tr>
-                      <% }) %>
-
-                        <% } else { %>
-
-                          <tr>
-                            <td colspan="6" style="text-align:center;">
-                              No developers found
-                            </td>
-                          </tr>
-
-                          <% } %>
-
-                </tbody>
-
-              </table>
-            </div>
-
-          </div>
-
-          <div class="table-footer">
-            <span>
-              Showing <%= developers.length %> of <%= developers.length %>
-            </span>
-
-            <div class="pagination">
-              <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
-              <button class="page active">1</button>
-              <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
-            </div>
-          </div>
+          </table>
+        </div>
 
       </div>
+
+      <div class="table-footer">
+        <span>Showing <%= developers.length %> of <%= developers.length %></span>
+
+        <div class="pagination">
+          <button class="page-btn"><i class="ri-arrow-left-s-line"></i></button>
+          <button class="page active">1</button>
+          <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- VIEW DRAWER (NO IMAGE VERSION) -->
-  <div id="viewDrawer" class="drawer">
+  <!-- CLIENTS DRAWER -->
+  <div id="clientsDrawer" class="drawer">
     <div class="drawer-content">
 
       <div class="drawer-header">
-        <button class="back-btn" onclick="closeDrawer()">
+        <button class="back-btn" onclick="closeClientsDrawer()">
           <i class="ri-arrow-left-line"></i>
         </button>
-
-        <div class="drawer-actions">
-          <button id="editBtn" class="edit-btn">Edit</button>
-          <button id="deleteBtn" class="delete-btn">Delete</button>
-        </div>
+        <h3>Assigned Clients</h3>
       </div>
 
-      <div id="drawerBody"></div>
+      <div id="clientsBody" style="padding:20px;"></div>
 
     </div>
   </div>
-
   <!-- DELETE MODAL -->
-  <div id="deleteModal" class="modal">
-    <div class="modal-content modern">
-      <h3>Confirm Delete</h3>
-      <p>Do you really want to delete?</p>
+<div id="deleteModal" class="modal">
+  <div class="modal-content modern">
+    <h3>Confirm Delete</h3>
+    <p>Do you really want to delete?</p>
 
-      <div class="modal-actions">
-        <button onclick="closeDelete()">Cancel</button>
-        <button onclick="confirmDelete()" class="delete-btn">Delete</button>
-      </div>
+    <div class="modal-actions">
+      <button onclick="closeDelete()">Cancel</button>
+
+      <button onclick="confirmDelete()" class="delete-btn">
+        Delete
+      </button>
     </div>
   </div>
+</div>
+  <script>
 
-  <!-- TOASTS -->
-  <% if (query && query.deleted) { %>
-    <div id="toast" class="toast error show">
-      Developer deleted successfully
-    </div>
-    <% } %>
+    function viewClients(devId) {
+      fetch(`/developers/${devId}/clients`)
+        .then(res => res.json())
+        .then(clients => {
 
-      <% if (query && query.added) { %>
-        <div id="toast" class="toast success show">
-          Developer added successfully
-        </div>
-        <% } %>
+          let html = `<div style="display:flex; flex-direction:column; gap:14px;">`;
 
-          <% if (query && query.updated) { %>
-            <div id="toast" class="toast success show">
-              Developer updated successfully
-            </div>
-            <% } %>
+          clients.forEach(client => {
+            html += `
+              <div style="border-bottom:1px solid #eee; padding-bottom:10px;">
+                
+                <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer;">
+                  
+                  <input type="checkbox"
+                    class="client-checkbox"
+                    value="${client._id}"
+                    ${client.assigned ? "checked" : ""}
+                    onchange="toggleProjects('${client._id}')">
 
-              <script>
+                  <div>
+                    <div style="font-size:12px; color:#8a8fa3;">
+                      ${client.clientId || ""}
+                    </div>
 
-                let deleteId = null;
+                    <div style="font-weight:600;">
+                      ${client.name}
+                    </div>
 
-                const searchInput = document.getElementById("searchInput");
-                searchInput.addEventListener("keyup", function () {
-                  const value = this.value.toLowerCase();
-                  const rows = document.querySelectorAll("#developersTable tbody tr");
+                    <div style="font-size:12px; color:#888;">
+                      ${client.email}
+                    </div>
+                  </div>
 
-                  rows.forEach(row => {
-                    row.style.display = row.textContent.toLowerCase().includes(value)
-                      ? "" : "none";
-                  });
-                });
+                </label>
 
-                const selectAll = document.getElementById("select-all");
-                const checkboxes = document.querySelectorAll(".row-checkbox");
+                <!-- PROJECT SECTION -->
+                <div id="projects-${client._id}"
+                  style="margin-left:26px; margin-top:6px; display:${client.assigned ? "block" : "none"};">
 
-                selectAll?.addEventListener("change", () => {
-                  checkboxes.forEach(cb => cb.checked = selectAll.checked);
-                });
+                  ${
+                    client.projects && client.projects.length
+                      ? client.projects.map(p => `
+                        <label style="display:flex; gap:6px; align-items:center; margin:4px 0;">
+                          
+                          <input type="checkbox"
+                            class="project-checkbox"
+                            value="${p._id}"
+                            ${p.developer === devId ? "checked" : ""}
+                          >
 
-                document.addEventListener("click", function (e) {
+                          <span style="font-size:13px;">
+                            ${p.title}
+                          </span>
 
-                  if (e.target.classList.contains("menu-toggle")) {
-                    e.stopPropagation();
-                    document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
-                    e.target.nextElementSibling.style.display = "block";
-                    return;
+                        </label>
+                      `).join("")
+                      : `<div style="font-size:12px; color:#aaa;">No projects</div>`
                   }
 
-                  const el = e.target.closest(".action-click");
-                  if (el) {
-                    const id = el.dataset.id;
-                    const action = el.dataset.action;
+                </div>
 
-                    if (action === "view") openViewDrawer(id);
-
-                    if (action === "edit")
-                      window.location.href = "/developers/edit/" + id;
-
-                    if (action === "delete") {
-                      deleteId = id;
-                      document.getElementById("deleteModal").style.display = "flex";
-                    }
-
-                    return;
-                  }
-
-                  document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
-                });
-
-                function openViewDrawer(id) {
-                  fetch("/developers/view/" + id)
-                    .then(res => res.json())
-                    .then(dev => {
-
-                      document.getElementById("drawerBody").innerHTML = `
-        <div style="padding: 22px;">
-
-          <!-- HEADER (Clients style) -->
-          <div style="
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #eee;
-          ">
-
-            <div>
-              <div style="font-size: 18px; font-weight: 700; color: #111;">
-                ${dev.name}
               </div>
+            `;
+          });
 
-              <div style="font-size: 12px; color: #9ca3af; margin-top: 4px;">
-                ${dev.dev_id}
-              </div>
-            </div>
+          html += `
+            <button onclick="saveClients('${devId}')" class="add-btn">
+              Save
+            </button>
+          </div>`;
 
-          </div>
+          document.getElementById("clientsBody").innerHTML = html;
+          document.getElementById("clientsDrawer").classList.add("active");
+        });
+    }
 
-          <!-- DETAILS (STRICT CLIENT STYLE ROWS) -->
-          <div style="display: flex; flex-direction: column; gap: 16px;">
+    function toggleProjects(clientId) {
+      const checkbox = document.querySelector(`.client-checkbox[value="${clientId}"]`);
+      const el = document.getElementById(`projects-${clientId}`);
 
-            <div>
-              <div style="font-size: 12px; color: #9ca3af;">Email</div>
-              <div style="font-size: 14px; font-weight: 600; color: #111;">
-                ${dev.email}
-              </div>
-            </div>
+      if (!el || !checkbox) return;
 
-            <div>
-              <div style="font-size: 12px; color: #9ca3af;">Role</div>
-              <div style="font-size: 14px; font-weight: 600; text-transform: capitalize;">
-                ${dev.role}
-              </div>
-            </div>
+      el.style.display = checkbox.checked ? "block" : "none";
+    }
 
-            <div>
-              <div style="font-size: 12px; color: #9ca3af;">Status</div>
-              <div style="margin-top: 4px;">
-                <span class="status ${dev.status}">
-                  ${dev.status}
-                </span>
-              </div>
-            </div>
+    function saveClients(devId) {
+      const checkedClients = document.querySelectorAll(".client-checkbox:checked");
+      const clientIds = Array.from(checkedClients).map(cb => cb.value);
 
-          </div>
+      const checkedProjects = document.querySelectorAll(".project-checkbox:checked");
+      const projectIds = Array.from(checkedProjects).map(cb => cb.value);
 
-        </div>
-      `;
+      fetch(`/developers/${devId}/assign-clients`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientIds, projectIds })
+      })
+      .then(res => res.json())
+      .then(() => {
+        const btn = document.querySelector(`.client-btn[data-id="${devId}"]`);
+        if (btn) {
+          btn.querySelector(".client-number").innerText = clientIds.length;
+        }
+        closeClientsDrawer();
+      });
+    }
 
-                      document.getElementById("editBtn").onclick = () => {
-                        window.location.href = "/developers/edit/" + id;
-                      };
+    function closeClientsDrawer() {
+      document.getElementById("clientsDrawer").classList.remove("active");
+    }
 
-                      document.getElementById("deleteBtn").onclick = () => {
-                        deleteId = id;
-                        document.getElementById("deleteModal").style.display = "flex";
-                      };
+  </script>
+  <script>
 
-                      document.getElementById("viewDrawer").classList.add("active");
-                    });
-                }
+  let deleteId = null;
 
-                function closeDrawer() {
-                  document.getElementById("viewDrawer").classList.remove("active");
-                }
+  // DROPDOWN TOGGLE
+  document.addEventListener("click", function () {
+    document.querySelectorAll(".dropdown").forEach(drop => {
+      drop.style.display = "none";
+    });
+  });
 
-                function closeDelete() {
-                  document.getElementById("deleteModal").style.display = "none";
-                }
+  document.querySelectorAll(".menu-toggle").forEach(toggle => {
 
-                function confirmDelete() {
-                  if (deleteId) {
-                    window.location.href = "/developers/delete/" + deleteId;
-                  }
-                }
+    toggle.addEventListener("click", function (e) {
 
-                document.querySelectorAll(".toast").forEach(toast => {
-                  setTimeout(() => {
-                    toast.style.display = "none";
-                  }, 4000);
-                });
+      e.stopPropagation();
 
-              </script>
+      document.querySelectorAll(".dropdown").forEach(drop => {
+        drop.style.display = "none";
+      });
+
+      const dropdown = this.nextElementSibling;
+
+      if (dropdown) {
+        dropdown.style.display = "block";
+      }
+
+    });
+
+  });
+
+  // ACTION CLICK
+  document.querySelectorAll(".action-click").forEach(item => {
+
+    item.addEventListener("click", function (e) {
+
+      e.stopPropagation();
+
+      const id = this.dataset.id;
+      const action = this.dataset.action;
+
+      if (!id || !action) return;
+
+      // EDIT
+      if (action === "edit") {
+        window.location.href = `/developers/edit/${id}`;
+      }
+
+      // DELETE
+      if (action === "delete") {
+
+        deleteId = id;
+
+        document.getElementById("deleteModal").style.display = "flex";
+      }
+
+    });
+
+  });
+
+  function closeDelete() {
+    document.getElementById("deleteModal").style.display = "none";
+  }
+
+  function confirmDelete() {
+
+    if (deleteId) {
+      window.location.href = `/developers/delete/${deleteId}`;
+    }
+
+  }
+
+</script>
 
 </body>
-
 </html>

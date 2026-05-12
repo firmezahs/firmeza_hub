@@ -7,7 +7,10 @@ const projectSchema = new mongoose.Schema({
   },
   title: String,
   description: String,
-  developer: String
+  developer: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Developer"
+}
 }, { timestamps: true });
 
 export default mongoose.model("Project", projectSchema);
